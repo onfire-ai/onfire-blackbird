@@ -1,13 +1,11 @@
+import json
+import re
 import sys
 import os
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-)
-
-from ..utils.http_client import do_sync_request
-from ..utils.log import logError
-from ..utils.parse import extractMetadata
+from blackbird.modules.utils.http_client import do_sync_request
+from blackbird.modules.utils.log import logError
+from blackbird.modules.utils.parse import extractMetadata
 from json import dumps
 from urllib.parse import urlencode
 

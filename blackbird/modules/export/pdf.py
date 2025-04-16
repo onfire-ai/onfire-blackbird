@@ -3,18 +3,13 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet
 import sys
 import os
 
-
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-)
-
-from ..export.file_operations import generateName
-
-
-from ..utils.log import logError
+from blackbird.modules.export.file_operations import generateName
+from blackbird.modules.utils.log import logError
 
 # Save results to PDF file
 

@@ -1,21 +1,17 @@
 import sys
 import os
 import time
-import aiohttp
 import asyncio
+import aiohttp
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-)
-
-from ..whatsmyname.list_operations import readList
-from ..utils.parse import extractMetadata, remove_duplicates
-from ..utils.filter import filterFoundAccounts, applyFilters
-from ..utils.http_client import do_async_request
-from ..utils.log import logError
-from ..export.dump import dumpContent
-from ..sites.instagram import get_instagram_account_info
-from ..ner.entity_extraction import extract_data_with_ai
+from blackbird.modules.whatsmyname.list_operations import readList
+from blackbird.modules.utils.parse import extractMetadata, remove_duplicates
+from blackbird.modules.utils.filter import filterFoundAccounts, applyFilters
+from blackbird.modules.utils.http_client import do_async_request
+from blackbird.modules.utils.log import logError
+from blackbird.modules.export.dump import dumpContent
+from blackbird.modules.sites.instagram import get_instagram_account_info
+from blackbird.modules.ner.entity_extraction import extract_data_with_ai
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -112,7 +108,7 @@ async def checkSite(
 
 
 # Control survey on list sites
-async def fetchResults(username, config):
+async def fetch_results(username, config):
     async with aiohttp.ClientSession() as session:
         tasks = []
         semaphore = asyncio.Semaphore(config.max_concurrent_requests)
@@ -133,7 +129,7 @@ async def fetchResults(username, config):
 
 
 # Start username check and presents results to user
-def verifyUsername(username, config, sitesToSearch=None, metadata_params=None):
+def verify_username(username, config, sitesToSearch=None, metadata_params=None):
     if sitesToSearch is None or metadata_params is None:
         data = readList("username", config)
         sitesToSearch = data["sites"]
@@ -147,7 +143,7 @@ def verifyUsername(username, config, sitesToSearch=None, metadata_params=None):
         f':play_button: Enumerating accounts with username "[cyan1]{username}[/cyan1]"'
     )
     start_time = time.time()
-    results = asyncio.run(fetchResults(username, config))
+    results = asyncio.run(fetch_results(username, config))
     end_time = time.time()
 
     config.console.print(

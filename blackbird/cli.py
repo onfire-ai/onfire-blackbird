@@ -5,19 +5,17 @@ import logging
 import sys
 from datetime import datetime
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
-
-import config
-from modules.whatsmyname.list_operations import checkUpdates
-from modules.core.username import verifyUsername
-from modules.core.email import verifyEmail
-from modules.utils.userAgent import getRandomUserAgent
-from modules.export.file_operations import createSaveDirectory
-from modules.export.csv import saveToCsv
-from modules.export.pdf import saveToPdf
-from modules.utils.file_operations import isFile, getLinesFromFile
-from modules.utils.permute import Permute
-from modules.ner.entity_extraction import inialize_nlp_model
+from blackbird import config
+from blackbird.modules.whatsmyname.list_operations import checkUpdates
+from blackbird.modules.core.username import verify_username
+from blackbird.modules.core.email import verify_email
+from blackbird.modules.utils.userAgent import getRandomUserAgent
+from blackbird.modules.export.file_operations import createSaveDirectory
+from blackbird.modules.export.csv import saveToCsv
+from blackbird.modules.export.pdf import saveToPdf
+from blackbird.modules.utils.file_operations import isFile, getLinesFromFile
+from blackbird.modules.utils.permute import Permute
+from blackbird.modules.ner.entity_extraction import inialize_nlp_model
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -160,7 +158,7 @@ def initiate():
     config.currentEmail = None
 
 
-if __name__ == "__main__":
+def main():
     initiate()
     config.console.print(
         """[red]
@@ -235,7 +233,7 @@ if __name__ == "__main__":
             config.currentUser = user
             if config.dump or config.csv or config.pdf:
                 createSaveDirectory(config)
-            verifyUsername(config.currentUser, config)
+            verify_username(config.currentUser, config)
             if config.csv and config.usernameFoundAccounts:
                 saveToCsv(config.usernameFoundAccounts, config)
             if config.pdf and config.usernameFoundAccounts:
@@ -258,7 +256,7 @@ if __name__ == "__main__":
             config.currentEmail = email
             if config.dump or config.csv or config.pdf:
                 createSaveDirectory(config)
-            verifyEmail(email, config)
+            verify_email(email, config)
             if config.csv and config.emailFoundAccounts:
                 saveToCsv(config.emailFoundAccounts, config)
             if config.pdf and config.emailFoundAccounts:

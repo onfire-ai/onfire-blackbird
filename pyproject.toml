@@ -1,0 +1,50 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "blackbird"
+version = "0.1.0"
+description = "A short description of the blackbird project." # Please update this
+authors = ["Your Name <you@example.com>"] # Please update this format
+readme = "README.md"
+license = "MIT" # Choose an appropriate license identifier from SPDX list
+homepage = "https://github.com/yourusername/onfire-blackbird" # Please update this
+repository = "https://github.com/yourusername/onfire-blackbird" # Please update this
+keywords = ["osint", "cli", "security"] # Add relevant keywords
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License", # Match license field
+    "Operating System :: OS Independent",
+]
+packages = [{include = "blackbird"}] # Tells Poetry where the package code is
+
+[tool.poetry.dependencies]
+python = ">=3.11,<4" # Constrained upper bound for compatibility
+rich = ">=13.7.1"
+python-dotenv = ">=1.0.1"
+requests = ">=2.31.0"
+reportlab = ">=4.1.0"
+chardet = ">=5.2.0"
+spacy = ">=3.8.2"
+beautifulsoup4 = ">=4.12.3"
+aiohttp = ">=3.9.3"
+tqdm = ">=4.67.0"
+
+[tool.poetry.group.ai-ner]
+optional = true
+
+[tool.poetry.group.ai-ner.dependencies]
+en-blackbird-osint-ner = "*" # Specify version constraints if needed
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8"
+black = "^24.0"
+isort = "^5.0"
+ruff = "^0.5"
+
+[tool.poetry.scripts]
+blackbird = "blackbird.cli:main"

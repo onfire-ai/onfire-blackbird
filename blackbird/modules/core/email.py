@@ -1,23 +1,16 @@
 import os
-from pathlib import Path
-from rich.markup import escape
 import time
 import aiohttp
 import asyncio
-import sys
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-)
-
-from ..utils.filter import filterFoundAccounts, applyFilters
-from ..utils.parse import extractMetadata
-from ..utils.http_client import do_async_request
-from ..whatsmyname.list_operations import readList
-from ..utils.input import processInput
-from ..utils.log import logError
-from ..export.dump import dumpContent
-from ..utils.precheck import perform_pre_check
+from blackbird.modules.utils.filter import filterFoundAccounts, applyFilters
+from blackbird.modules.utils.parse import extractMetadata
+from blackbird.modules.utils.http_client import do_async_request
+from blackbird.modules.whatsmyname.list_operations import readList
+from blackbird.modules.utils.input import processInput
+from blackbird.modules.utils.log import logError
+from blackbird.modules.export.dump import dumpContent
+from blackbird.modules.utils.precheck import perform_pre_check
 
 
 # Verify account existence based on list args
@@ -126,8 +119,7 @@ async def fetchResults(email, config):
 
 
 # Start email check and presents results to user
-def verifyEmail(email, config):
-
+def verify_email(email, config):
     data = readList("email", config)
     sitesToSearch = data["sites"]
     config.email_sites = applyFilters(sitesToSearch, config)

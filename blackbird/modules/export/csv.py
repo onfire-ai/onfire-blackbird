@@ -1,14 +1,8 @@
-import csv
-import sys
 import os
+import csv
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-)
-
-from ..export.file_operations import generateName
-
-from ..utils.log import logError
+from blackbird.modules.export.file_operations import generateName
+from blackbird.modules.utils.log import logError
 
 
 # Save results to CSV file

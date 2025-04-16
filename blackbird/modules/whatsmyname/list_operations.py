@@ -1,13 +1,11 @@
-import os
 import sys
+import os
 import json
+import requests
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-
-from utils.http_client import do_sync_request
-from utils.hash import hashJSON
-from utils.log import logError
+from blackbird.modules.utils.http_client import do_sync_request
+from blackbird.modules.utils.hash import hashJSON
+from blackbird.modules.utils.log import logError
 
 
 # Read list file and return content

@@ -5,7 +5,8 @@ import warnings
 import sys
 import traceback
 import re
-from ..utils.parse import download_image
+import asyncio
+from blackbird.modules.utils.parse import download_image
 
 warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
 

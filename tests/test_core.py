@@ -1,18 +1,13 @@
 import sys
 import os
-import unittest
 from rich.console import Console
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
-
-import config
-from src.modules.core.username import verifyUsername
-from src.modules.core.email import verifyEmail
-from src.modules.export.csv import saveToCsv
-from src.modules.export.pdf import saveToPdf
-from src.modules.utils.userAgent import getRandomUserAgent
+from blackbird import config
+from blackbird import verify_username
+from blackbird import verify_email
+from blackbird.modules.utils.userAgent import getRandomUserAgent
 from datetime import datetime
-from src.modules.whatsmyname.list_operations import checkUpdates
+from blackbird.modules.whatsmyname.list_operations import checkUpdates
 
 config.no_nsfw = None
 config.proxy = None
@@ -31,23 +26,13 @@ config.datePretty = datetime.now().strftime("%B %d, %Y")
 
 checkUpdates(config)
 
-
-class TestEmail(unittest.TestCase):
+def test_verify_email():
     config.currentEmail = "john@gmail.com"
-
-    def test_verify_email(self):
-
-        result = verifyEmail(config.currentEmail, config)
-        self.assertTrue(result)
+    result = verify_email(config.currentEmail, config)
+    assert result
 
 
-class TestUsername(unittest.TestCase):
+def test_verify_username():
     config.currentUser = "p1ngul1n0"
-
-    def test_verify_username(self):
-        result = verifyUsername(config.currentUser, config)
-        self.assertTrue(result)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    result = verify_username(config.currentUser, config)
+    assert result

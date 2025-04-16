@@ -1,15 +1,12 @@
 import sys
 import os
 import json
-import unittest
 from rich.console import Console
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
-
-import config
-from src.modules.export.csv import saveToCsv
-from src.modules.export.pdf import saveToPdf
-from src.modules.export.file_operations import createSaveDirectory
+from blackbird import config
+from blackbird.modules.export.csv import saveToCsv
+from blackbird.modules.export.pdf import saveToPdf
+from blackbird.modules.export.file_operations import createSaveDirectory
 from datetime import datetime
 
 config.console = Console()
@@ -25,39 +22,33 @@ config.dateRaw = datetime.now().strftime("%m_%d_%Y")
 config.datePretty = datetime.now().strftime("%B %d, %Y")
 
 
-class TestExportToPDF(unittest.TestCase):
+def test_export_pdf():
     config.currentEmail = "john@gmail.com"
     config.pdf = True
     config.csv = False
+    config.currentUser = None
     createSaveDirectory(config)
-
-    def test_export_pdf(self):
-        with open(
-            os.path.join(os.getcwd(), "tests", "data", "mock-email.json"),
-            "r",
-            encoding="UTF-8",
-        ) as f:
-            foundAccounts = json.load(f)
-        result = saveToPdf(foundAccounts, "email", config)
-        self.assertTrue(result)
+    with open(
+        os.path.join(os.getcwd(), "tests", "data", "mock-email.json"),
+        "r",
+        encoding="UTF-8",
+    ) as f:
+        foundAccounts = json.load(f)
+    result = saveToPdf(foundAccounts, "email", config)
+    assert result
 
 
-class TestExportToCSV(unittest.TestCase):
+def test_export_csv():
     config.currentUser = "p1ngul1n0"
     config.pdf = False
     config.csv = True
+    config.currentEmail = None
     createSaveDirectory(config)
-
-    def test_export_csv(self):
-        with open(
-            os.path.join(os.getcwd(), "tests", "data", "mock-username.json"),
-            "r",
-            encoding="UTF-8",
-        ) as f:
-            foundAccounts = json.load(f)
-        result = saveToCsv(foundAccounts, config)
-        self.assertTrue(result)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    with open(
+        os.path.join(os.getcwd(), "tests", "data", "mock-username.json"),
+        "r",
+        encoding="UTF-8",
+    ) as f:
+        foundAccounts = json.load(f)
+    result = saveToCsv(foundAccounts, config)
+    assert result

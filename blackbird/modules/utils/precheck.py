@@ -1,12 +1,9 @@
 import sys
 import os
+import json
 
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-)
-
-from ..utils.http_client import do_sync_request
-from ..utils.log import logError
+from blackbird.modules.utils.http_client import do_sync_request
+from blackbird.modules.utils.log import logError
 
 
 def perform_pre_check(precheck_params, headers, config):

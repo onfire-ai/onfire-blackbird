@@ -1,11 +1,8 @@
 import requests
-import sys
 import os
 import chardet
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "."))
-
-from log import logError
+from blackbird.modules.utils.log import logError
 
 requests.packages.urllib3.disable_warnings()
 
