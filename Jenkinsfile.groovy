@@ -41,6 +41,7 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
+                sh 'apt-get update && apt-get install -y build-essential'
                 sh 'poetry install --with dev,ai-ner'
             }
         }
