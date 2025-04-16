@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 from datetime import datetime
+from pathlib import Path
 
 from dotenv import load_dotenv
 from rich.console import Console
@@ -23,8 +24,10 @@ load_dotenv()
 
 
 def initialize():
-    if not os.path.exists("logs/"):
-        os.makedirs("logs/")
+    log_dir = Path(config.BASE_DIR) / config.LOG_DIRECTORY
+    if not log_dir.exists():
+        log_dir.mkdir(parents=True, exist_ok=True)
+
     logging.basicConfig(
         filename=config.LOG_PATH, level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
