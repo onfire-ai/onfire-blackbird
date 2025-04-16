@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "onfire-blackbird"
-version = "0.1.4"
+version = "0.1.5"
 description = "A short description of the blackbird project." # Please update this
 authors = ["Your Name <you@example.com>"] # Please update this format
 readme = "README.md"
@@ -39,7 +39,7 @@ tqdm = ">=4.67.0"
 optional = true
 
 [tool.poetry.group.ai-ner.dependencies]
-en-blackbird-osint-ner = "*" # Specify version constraints if needed
+en-blackbird-osint-ner = "^1.0.0"
 
 [tool.poetry.group.dev]
 optional = true

@@ -9,6 +9,7 @@ import aiohttp
 from blackbird.modules.export.dump import dump_content
 from blackbird.modules.ner.entity_extraction import extract_data_with_ai
 from blackbird.modules.sites.instagram import get_instagram_account_info
+from blackbird.modules.utils.console import print_if_not_json
 from blackbird.modules.utils.filter import apply_filters, filter_found_accounts
 from blackbird.modules.utils.http_client import do_async_request
 from blackbird.modules.utils.log import log_error
@@ -35,7 +36,7 @@ async def check_site(site, method, url, session, semaphore, config):
                         (site["m_code"] != response["status_code"]) if site["m_code"] != site["e_code"] else True
                     ):
                         returnData["status"] = "FOUND"
-                        config.console.print(
+                        print_if_not_json(
                             f"  ✔️  \[[cyan1]{site['name']}[/cyan1]] [bright_white]{response['url']}[/bright_white]"
                         )
 
@@ -67,11 +68,11 @@ async def check_site(site, method, url, session, semaphore, config):
                             path = Path(config.saveDirectory) / f"dump_{config.currentUser}"
                             result = dump_content(path, site, response, config)
                             if result is True and config.verbose:
-                                config.console.print("      💾  Saved HTML data from found account")
+                                print_if_not_json("      💾  Saved HTML data from found account")
                 else:
                     returnData["status"] = "NOT-FOUND"
                     if config.verbose:
-                        config.console.print(
+                        print_if_not_json(
                             f"  ❌ [[blue]{site['name']}[/blue]] [bright_white]{response['url']}[/bright_white]"
                         )
                 return returnData
@@ -112,17 +113,17 @@ def verify_username(username, config, sitesToSearch=None, metadata_params=None):
 
     config.username_sites = apply_filters(sitesToSearch, config)
 
-    config.console.print(f':play_button: Enumerating accounts with username "[cyan1]{username}[/cyan1]"')
+    print_if_not_json(f':play_button: Enumerating accounts with username "[cyan1]{username}[/cyan1]"')
     start_time = time.time()
     results = asyncio.run(fetch_results(username, config))
     end_time = time.time()
 
-    config.console.print(
+    print_if_not_json(
         f":chequered_flag: Check completed in {round(end_time - start_time, 1)} seconds ({len(results['results'])} sites)"
     )
 
     if config.dump:
-        config.console.print(
+        print_if_not_json(
             f"💾  Dump content saved to '[cyan1]{config.currentUser}_{config.dateRaw}_blackbird/dump_{config.currentUser}[/cyan1]'"
         )
 
@@ -130,6 +131,6 @@ def verify_username(username, config, sitesToSearch=None, metadata_params=None):
     foundAccounts = list(filter(filter_found_accounts, results["results"]))
     config.usernameFoundAccounts = foundAccounts
     if len(foundAccounts) <= 0:
-        config.console.print("⭕ No accounts were found for the given username")
+        print_if_not_json("⭕ No accounts were found for the given username")
 
     return foundAccounts

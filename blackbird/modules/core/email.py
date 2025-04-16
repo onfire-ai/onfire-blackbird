@@ -5,6 +5,7 @@ from pathlib import Path
 import aiohttp
 
 from blackbird.modules.export.dump import dump_content
+from blackbird.modules.utils.console import print_if_not_json
 from blackbird.modules.utils.filter import apply_filters, filter_found_accounts
 from blackbird.modules.utils.http_client import do_async_request
 from blackbird.modules.utils.input import process_input
@@ -34,7 +35,7 @@ async def check_site(site, method, url, session, semaphore, config, data=None, h
                 if (site["e_string"] in response["content"]) and (site["e_code"] == response["status_code"]):
                     if (site["m_string"] not in response["content"]) and (site["m_code"] != response["status_code"]):
                         returnData["status"] = "FOUND"
-                        config.console.print(
+                        print_if_not_json(
                             f"  ✔️  \[[cyan1]{site['name']}[/cyan1]] [bright_white]{response['url']}[/bright_white]"
                         )
                         if site["metadata"]:
@@ -47,11 +48,11 @@ async def check_site(site, method, url, session, semaphore, config, data=None, h
 
                             result = dump_content(path, site, response, config)
                             if result is True and config.verbose:
-                                config.console.print("      💾  Saved HTML data from found account")
+                                print_if_not_json("      💾  Saved HTML data from found account")
                 else:
                     returnData["status"] = "NOT-FOUND"
                     if config.verbose:
-                        config.console.print(
+                        print_if_not_json(
                             f"  ❌ [[blue]{site['name']}[/blue]] [bright_white]{response['url']}[/bright_white]"
                         )
                 return returnData
@@ -98,17 +99,17 @@ def verify_email(email, config):
     sitesToSearch = data["sites"]
     config.email_sites = apply_filters(sitesToSearch, config)
 
-    config.console.print(f':play_button: Enumerating accounts with email "[cyan1]{email}[/cyan1]"')
+    print_if_not_json(f':play_button: Enumerating accounts with email "[cyan1]{email}[/cyan1]"')
     start_time = time.time()
     results = asyncio.run(fetch_results(email, config))
     end_time = time.time()
 
-    config.console.print(
+    print_if_not_json(
         f":chequered_flag: Check completed in {round(end_time - start_time, 1)} seconds ({len(results['results'])} sites)"
     )
 
     if config.dump:
-        config.console.print(
+        print_if_not_json(
             f"💾  Dump content saved to '[cyan1]{config.currentEmail}_{config.dateRaw}_blackbird/dump_{config.currentEmail}[/cyan1]'"
         )
 
@@ -117,6 +118,6 @@ def verify_email(email, config):
     config.emailFoundAccounts = foundAccounts
 
     if len(foundAccounts) <= 0:
-        config.console.print("⭕ No accounts were found for the given email")
+        print_if_not_json("⭕ No accounts were found for the given email")
 
     return foundAccounts

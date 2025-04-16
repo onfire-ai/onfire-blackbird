@@ -2,6 +2,8 @@ from pathlib import Path
 
 from rich.markup import escape
 
+from blackbird.modules.utils.console import print_if_not_json
+
 
 # Creates directory to save PDF, CSV and HTML content
 def create_save_directory(config):
@@ -12,7 +14,7 @@ def create_save_directory(config):
     if not strPath.exists():
         strPath.mkdir(parents=True, exist_ok=True)
         if config.verbose:
-            config.console.print(escape(f"🆕 Created directory to save search data [{folderName}]"))
+            print_if_not_json(escape(f"🆕 Created directory to save search data [{folderName}]"))
 
     if config.dump:
         if config.currentUser:

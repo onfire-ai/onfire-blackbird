@@ -2,6 +2,7 @@ import csv
 from pathlib import Path
 
 from blackbird.modules.export.file_operations import generate_name
+from blackbird.modules.utils.console import print_if_not_json
 from blackbird.modules.utils.log import log_error
 
 
@@ -24,7 +25,7 @@ def save_to_csv(foundAccounts, config):
                 siteState = "✓" if account["status"] == "FOUND" else "✕"
                 writer.writerow([account["name"], siteState, account["url"]])
 
-        config.console.print(f"💾  Saved results to '[cyan1]{fileName}[/cyan1]'")
+        print_if_not_json(f"💾  Saved results to '[cyan1]{fileName}[/cyan1]'")
         return True
     except Exception as e:
         log_error(e, "Coudn't save results to CSV file!", config)

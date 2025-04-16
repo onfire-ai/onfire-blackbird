@@ -15,6 +15,7 @@ from blackbird.modules.export.csv import save_to_csv
 from blackbird.modules.export.file_operations import create_save_directory
 from blackbird.modules.export.pdf import save_to_pdf
 from blackbird.modules.ner.entity_extraction import inialize_nlp_model
+from blackbird.modules.utils.console import print_if_not_json
 from blackbird.modules.utils.file_operations import get_lines_from_file, is_file
 from blackbird.modules.utils.permute import Permute
 from blackbird.modules.utils.userAgent import get_random_user_agent
@@ -48,6 +49,9 @@ def initialize():
         "--pdf", default=False, action=argparse.BooleanOptionalAction, help="Generate a PDF with the results."
     )
     parser.add_argument(
+        "--json", default=False, action=argparse.BooleanOptionalAction, help="Output results as JSON to stdout."
+    )
+    parser.add_argument(
         "-v", "--verbose", default=False, action=argparse.BooleanOptionalAction, help="Show verbose output."
     )
     parser.add_argument(
@@ -77,6 +81,7 @@ def initialize():
     config.permuteall = args.permuteall
     config.csv = args.csv
     config.pdf = args.pdf
+    config.json = args.json
     config.filter = args.filter
     config.no_nsfw = args.no_nsfw
     config.dump = args.dump
@@ -107,7 +112,9 @@ def initialize():
 
 def main():
     initialize()
-    config.console.print(
+
+    # ASCII art and other UI elements will only print if not in JSON mode
+    print_if_not_json(
         """[red]
     ▄▄▄▄    ██▓    ▄▄▄       ▄████▄   ██ ▄█▀ ▄▄▄▄    ██▓ ██▀███  ▓█████▄
     ▓█████▄ ▓██▒   ▒████▄    ▒██▀ ▀█   ██▄█▒ ▓█████▄ ▓██▒▓██ ▒ ██▒▒██▀ ██▌
@@ -122,12 +129,10 @@ def main():
 
     [/red]"""
     )
-    config.console.print(
-        "           [white]Made with :beating_heart: by [red]Lucas 'P1ngul1n0' Antoniaci[/red] [/white]"
-    )
+    print_if_not_json("           [white]Made with :beating_heart: by [red]Lucas 'P1ngul1n0' Antoniaci[/red] [/white]")
 
     if config.about:
-        config.console.print(
+        print_if_not_json(
             """
         Author: Lucas Antoniaci (p1ngul1n0)
         Description: Blackbird is an OSINT tool that perform reverse search in username and emails.
@@ -137,14 +142,14 @@ def main():
         sys.exit()
 
     if not config.username and not config.email and not config.username_file and not config.email_file:
-        config.console.print("Either --username or --email is required")
+        print_if_not_json("Either --username or --email is required")
         sys.exit()
     if not config.username and (config.permute or config.permuteall):
-        config.console.print("Permutations requires --username")
+        print_if_not_json("Permutations requires --username")
         sys.exit()
 
     if config.no_update:
-        config.console.print(":next_track_button:  Skipping update...")
+        print_if_not_json(":next_track_button:  Skipping update...")
     else:
         check_updates(config)
 
@@ -155,11 +160,11 @@ def main():
     if config.username_file:
         if is_file(config.username_file):
             config.username = get_lines_from_file(config.username_file)
-            config.console.print(
+            print_if_not_json(
                 f':glasses: Successfully loaded {len(config.username)} usernames from "{config.username_file}"'
             )
         else:
-            config.console.print(f'❌ Could not read file "{config.username_file}"')
+            print_if_not_json(f'❌ Could not read file "{config.username_file}"')
             sys.exit()
 
     if config.username:
@@ -168,27 +173,33 @@ def main():
             way = "all" if config.permuteall else "strict"
             permute = Permute(config.username)
             config.username = permute.gather(way)
-            config.console.print(
+            print_if_not_json(
                 f":glasses: Successfully loaded {len(config.username)} usernames from permuting {elements}"
             )
         for user in config.username:
             config.currentUser = user
             if config.dump or config.csv or config.pdf:
                 create_save_directory(config)
-            verify_username(config.currentUser, config)
-            if config.csv and config.usernameFoundAccounts:
-                save_to_csv(config.usernameFoundAccounts, config)
-            if config.pdf and config.usernameFoundAccounts:
-                save_to_pdf(config.usernameFoundAccounts, "username", config)
+            found_accounts = verify_username(config.currentUser, config)
+            if config.csv and found_accounts:
+                save_to_csv(found_accounts, config)
+            if config.pdf and found_accounts:
+                save_to_pdf(found_accounts, "username", config)
+            if config.json and found_accounts:
+                from blackbird.modules.export.json_output import output_json
+
+                output_json(found_accounts, config)
+                # Exit after JSON output
+                return
             config.currentUser = None
             config.usernameFoundAccounts = None
 
     if config.email_file:
         if is_file(config.email_file):
             config.email = get_lines_from_file(config.email_file)
-            config.console.print(f':glasses: Successfully loaded {len(config.email)} emails from "{config.email_file}"')
+            print_if_not_json(f':glasses: Successfully loaded {len(config.email)} emails from "{config.email_file}"')
         else:
-            config.console.print(f'❌ Could not read file "{config.email_file}"')
+            print_if_not_json(f'❌ Could not read file "{config.email_file}"')
             sys.exit()
 
     if config.email:
@@ -196,10 +207,16 @@ def main():
             config.currentEmail = email
             if config.dump or config.csv or config.pdf:
                 create_save_directory(config)
-            verify_email(email, config)
-            if config.csv and config.emailFoundAccounts:
-                save_to_csv(config.emailFoundAccounts, config)
-            if config.pdf and config.emailFoundAccounts:
-                save_to_pdf(config.emailFoundAccounts, "email", config)
+            email_found_accounts = verify_email(email, config)
+            if config.csv and email_found_accounts:
+                save_to_csv(email_found_accounts, config)
+            if config.pdf and email_found_accounts:
+                save_to_pdf(email_found_accounts, "email", config)
+            if config.json and email_found_accounts:
+                from blackbird.modules.export.json_output import output_json
+
+                output_json(email_found_accounts, config)
+                # Exit after JSON output
+                return
             config.currentEmail = None
             config.emailFoundAccounts = None

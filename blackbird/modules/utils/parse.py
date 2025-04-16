@@ -1,5 +1,7 @@
 import re
 
+from blackbird.modules.utils.console import print_if_not_json
+
 
 def access_json_property(data, path_config):
     try:
@@ -65,21 +67,21 @@ def extract_metadata(metadata, response, site, config):
                     metadataReturn["value"] = prefix + returnValue
                 else:
                     metadataReturn["value"] = returnValue
-                config.console.print(f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}")
+                print_if_not_json(f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}")
             elif params["type"] == "Array" and returnValue:
                 metadataReturn["value"] = []
-                config.console.print(f"      :right_arrow:  {metadataReturn['name']}:")
+                print_if_not_json(f"      :right_arrow:  {metadataReturn['name']}:")
                 for value in returnValue:
                     itemValue = access_json_property(value, metadataReturn["item-path"])
                     metadataReturn["value"].append(itemValue)
-                    config.console.print(f"         :blue_circle: {itemValue}")
+                    print_if_not_json(f"         :blue_circle: {itemValue}")
             elif params["type"] == "Image" and returnValue:
                 metadataReturn["downloaded"] = False
                 if prefix:
                     metadataReturn["value"] = prefix + returnValue
                 else:
                     metadataReturn["value"] = returnValue
-                config.console.print(f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}")
+                print_if_not_json(f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}")
                 if config.pdf:
                     metadataReturn = download_image(metadataReturn, site, config)
             extractedMetadata.append(metadataReturn)

@@ -1,6 +1,8 @@
 import re
 import sys
 
+from blackbird.modules.utils.console import print_if_not_json
+
 
 def filter_found_accounts(site):
     if "status" in site and site["status"] == "FOUND":
@@ -56,7 +58,7 @@ def filter_accounts(filter, site):
     result = evaluate_condition(*conditions[0], site)
 
     if not conditions:
-        print('⭕ Filter is not in correct format. Format should be --filter "property=value"')
+        print_if_not_json('⭕ Filter is not in correct format. Format should be --filter "property=value"')
         sys.exit()
     # Evaluate remaining conditions and combine using logical operators
     for i in range(1, len(conditions)):
@@ -81,17 +83,17 @@ def apply_filters(sitesToSearch, config):
     if config.filter:
         sitesToSearch = list(filter(lambda x: filter_accounts(config.filter, x), sitesToSearch))
         if (len(sitesToSearch)) <= 0:
-            config.console.print(f"⭕ No sites found for the given filter {config.filter}")
+            print_if_not_json(f"⭕ No sites found for the given filter {config.filter}")
             sys.exit()
         else:
-            config.console.print(f':page_with_curl: Applied "{config.filter}" filter to sites [{len(sitesToSearch)}]')
+            print_if_not_json(f':page_with_curl: Applied "{config.filter}" filter to sites [{len(sitesToSearch)}]')
 
     if config.no_nsfw:
         sitesToSearch = list(filter(lambda x: filter_nsfw(x), sitesToSearch))
         if (len(sitesToSearch)) <= 0:
-            config.console.print("⭕ No remaining sites to be searched after NSFW filtering")
+            print_if_not_json("⭕ No remaining sites to be searched after NSFW filtering")
             sys.exit()
         else:
-            config.console.print(f":page_with_curl: Filtered NSFW sites [{len(sitesToSearch)}]")
+            print_if_not_json(f":page_with_curl: Filtered NSFW sites [{len(sitesToSearch)}]")
 
     return sitesToSearch

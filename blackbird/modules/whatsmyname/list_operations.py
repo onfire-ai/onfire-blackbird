@@ -1,6 +1,7 @@
 import json
 import os
 
+from blackbird.modules.utils.console import print_if_not_json
 from blackbird.modules.utils.hash import hash_json
 from blackbird.modules.utils.http_client import do_sync_request
 from blackbird.modules.utils.log import log_error
@@ -34,22 +35,22 @@ def download_list(config):
 # Check for changes in remote list
 def check_updates(config):
     if os.path.isfile(config.USERNAME_LIST_PATH):
-        config.console.print(":counterclockwise_arrows_button: Checking for updates...")
+        print_if_not_json(":counterclockwise_arrows_button: Checking for updates...")
         try:
             data = read_list("username", config)
             currentListHash = hash_json(data)
             response = do_sync_request("GET", config.USERNAME_LIST_URL, config)
             remoteListHash = hash_json(response.json())
             if currentListHash != remoteListHash:
-                config.console.print(":counterclockwise_arrows_button: Updating...")
+                print_if_not_json(":counterclockwise_arrows_button: Updating...")
                 download_list(config)
             else:
-                config.console.print("✔️  Sites List is up to date")
+                print_if_not_json("✔️  Sites List is up to date")
         except Exception as e:
-            config.console.print(":police_car_light: Coudn't read local list")
-            config.console.print(":down_arrow: Downloading site list")
+            print_if_not_json(":police_car_light: Coudn't read local list")
+            print_if_not_json(":down_arrow: Downloading site list")
             log_error(e, "Coudn't read local list", config)
             download_list(config)
     else:
-        config.console.print(":globe_with_meridians: Downloading site list")
+        print_if_not_json(":globe_with_meridians: Downloading site list")
         download_list(config)
