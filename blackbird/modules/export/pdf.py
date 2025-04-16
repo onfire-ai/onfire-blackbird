@@ -1,12 +1,10 @@
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase.pdfmetrics import stringWidth
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Paragraph, Spacer, Image
-from reportlab.lib.styles import getSampleStyleSheet
-import sys
 import os
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.pdfmetrics import stringWidth
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 
 from blackbird.modules.export.file_operations import generateName
 from blackbird.modules.utils.log import logError
@@ -187,9 +185,7 @@ def saveToPdf(foundAccounts, resultType, config):
                                     7,
                                 )
                                 canva.setFont(config.FONT_NAME_REGULAR, 7)
-                                canva.drawString(
-                                    93 + metadataWidth, y_position, f"{data['value']}"
-                                )
+                                canva.drawString(93 + metadataWidth, y_position, f"{data['value']}")
                                 y_position -= 15
                             elif data["type"] == "Array":
                                 metadataWidth = stringWidth(
@@ -247,7 +243,7 @@ def saveToPdf(foundAccounts, resultType, config):
                                             height=35,
                                         )
                                         y_position -= 15
-                                    except:
+                                    except Exception:
                                         pass
                         endWidth = y_position
                         canva.setStrokeColor("#CE0000")

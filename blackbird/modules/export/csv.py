@@ -1,5 +1,5 @@
-import os
 import csv
+import os
 
 from blackbird.modules.export.file_operations import generateName
 from blackbird.modules.utils.log import logError

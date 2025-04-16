@@ -1,10 +1,8 @@
-import sys
-import os
 import json
-import requests
+import os
 
-from blackbird.modules.utils.http_client import do_sync_request
 from blackbird.modules.utils.hash import hashJSON
+from blackbird.modules.utils.http_client import do_sync_request
 from blackbird.modules.utils.log import logError
 
 
@@ -50,7 +48,7 @@ def checkUpdates(config):
         except Exception as e:
             config.console.print(":police_car_light: Coudn't read local list")
             config.console.print(":down_arrow: Downloading site list")
-            logError(e, f"Coudn't read local list", config)
+            logError(e, "Coudn't read local list", config)
             downloadList(config)
     else:
         config.console.print(":globe_with_meridians: Downloading site list")

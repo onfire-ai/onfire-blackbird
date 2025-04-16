@@ -56,9 +56,7 @@ def filterAccounts(filter, site):
     result = evaluate_condition(*conditions[0], site)
 
     if not conditions:
-        print(
-            '⭕ Filter is not in correct format. Format should be --filter "property=value"'
-        )
+        print('⭕ Filter is not in correct format. Format should be --filter "property=value"')
         sys.exit()
     # Evaluate remaining conditions and combine using logical operators
     for i in range(1, len(conditions)):
@@ -81,29 +79,19 @@ def filterNSFW(site):
 
 def applyFilters(sitesToSearch, config):
     if config.filter:
-        sitesToSearch = list(
-            filter(lambda x: filterAccounts(config.filter, x), sitesToSearch)
-        )
+        sitesToSearch = list(filter(lambda x: filterAccounts(config.filter, x), sitesToSearch))
         if (len(sitesToSearch)) <= 0:
-            config.console.print(
-                f"⭕ No sites found for the given filter {config.filter}"
-            )
+            config.console.print(f"⭕ No sites found for the given filter {config.filter}")
             sys.exit()
         else:
-            config.console.print(
-                f':page_with_curl: Applied "{config.filter}" filter to sites [{len(sitesToSearch)}]'
-            )
+            config.console.print(f':page_with_curl: Applied "{config.filter}" filter to sites [{len(sitesToSearch)}]')
 
     if config.no_nsfw:
         sitesToSearch = list(filter(lambda x: filterNSFW(x), sitesToSearch))
         if (len(sitesToSearch)) <= 0:
-            config.console.print(
-                f"⭕ No remaining sites to be searched after NSFW filtering"
-            )
+            config.console.print("⭕ No remaining sites to be searched after NSFW filtering")
             sys.exit()
         else:
-            config.console.print(
-                f":page_with_curl: Filtered NSFW sites [{len(sitesToSearch)}]"
-            )
+            config.console.print(f":page_with_curl: Filtered NSFW sites [{len(sitesToSearch)}]")
 
     return sitesToSearch

@@ -1,17 +1,18 @@
-import sys
-import os
-import time
 import asyncio
+import os
+import sys
+import time
+
 import aiohttp
 
-from blackbird.modules.whatsmyname.list_operations import readList
-from blackbird.modules.utils.parse import extractMetadata, remove_duplicates
-from blackbird.modules.utils.filter import filterFoundAccounts, applyFilters
+from blackbird.modules.export.dump import dumpContent
+from blackbird.modules.ner.entity_extraction import extract_data_with_ai
+from blackbird.modules.sites.instagram import get_instagram_account_info
+from blackbird.modules.utils.filter import applyFilters, filterFoundAccounts
 from blackbird.modules.utils.http_client import do_async_request
 from blackbird.modules.utils.log import logError
-from blackbird.modules.export.dump import dumpContent
-from blackbird.modules.sites.instagram import get_instagram_account_info
-from blackbird.modules.ner.entity_extraction import extract_data_with_ai
+from blackbird.modules.utils.parse import extractMetadata, remove_duplicates
+from blackbird.modules.whatsmyname.list_operations import readList
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -36,18 +37,14 @@ async def checkSite(
 
     async with semaphore:
         response = await do_async_request(method, url, session, config)
-        if response == None:
+        if response is None:
             returnData["status"] = "ERROR"
             return returnData
         try:
             if response:
-                if (site["e_string"] in response["content"]) and (
-                    site["e_code"] == response["status_code"]
-                ):
+                if (site["e_string"] in response["content"]) and (site["e_code"] == response["status_code"]):
                     if (site["m_string"] not in response["content"]) and (
-                        (site["m_code"] != response["status_code"])
-                        if site["m_code"] != site["e_code"]
-                        else True
+                        (site["m_code"] != response["status_code"]) if site["m_code"] != site["e_code"] else True
                     ):
                         returnData["status"] = "FOUND"
                         config.console.print(
@@ -64,9 +61,7 @@ async def checkSite(
                             extractedMetadata.extend(metadata)
 
                         if config.ai and config.aiModel:
-                            metadata = extract_data_with_ai(
-                                config, site, response["content"], response["json"]
-                            )
+                            metadata = extract_data_with_ai(config, site, response["content"], response["json"])
                             extractedMetadata.extend(metadata)
 
                         if site["name"] == "Instagram":
@@ -86,15 +81,11 @@ async def checkSite(
 
                         # Save response content to a .HTML file
                         if config.dump:
-                            path = os.path.join(
-                                config.saveDirectory, f"dump_{config.currentUser}"
-                            )
+                            path = os.path.join(config.saveDirectory, f"dump_{config.currentUser}")
 
                             result = dumpContent(path, site, response, config)
-                            if result == True and config.verbose:
-                                config.console.print(
-                                    f"      💾  Saved HTML data from found account"
-                                )
+                            if result is True and config.verbose:
+                                config.console.print("      💾  Saved HTML data from found account")
                 else:
                     returnData["status"] = "NOT-FOUND"
                     if config.verbose:
@@ -139,9 +130,7 @@ def verify_username(username, config, sitesToSearch=None, metadata_params=None):
 
     config.username_sites = applyFilters(sitesToSearch, config)
 
-    config.console.print(
-        f':play_button: Enumerating accounts with username "[cyan1]{username}[/cyan1]"'
-    )
+    config.console.print(f':play_button: Enumerating accounts with username "[cyan1]{username}[/cyan1]"')
     start_time = time.time()
     results = asyncio.run(fetch_results(username, config))
     end_time = time.time()

@@ -1,9 +1,4 @@
-import sys
-import os
-import json
-
 from blackbird.modules.utils.http_client import do_sync_request
-from blackbird.modules.utils.log import logError
 
 
 def perform_pre_check(precheck_params, headers, config):
@@ -18,14 +13,10 @@ def perform_pre_check(precheck_params, headers, config):
             cookie_value = response.cookies.get(precheck_params["cookie_name"])
             if cookie_value:
                 if config.verbose:
-                    config.console.print(
-                        f"🔑 Acquired cookie {cookie_name}: {cookie_value}"
-                    )
+                    config.console.print(f"🔑 Acquired cookie {cookie_name}: {cookie_value}")
                 for header in headers:
-                    headers[header] = headers[header].replace(
-                        "{" + cookie_name + "_value}", cookie_value
-                    )
+                    headers[header] = headers[header].replace("{" + cookie_name + "_value}", cookie_value)
 
         return headers
-    except Exception as e:
+    except Exception:
         return None

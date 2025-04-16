@@ -1,13 +1,9 @@
-import json
-import re
-import sys
-import os
+from json import dumps
+from urllib.parse import urlencode
 
 from blackbird.modules.utils.http_client import do_sync_request
 from blackbird.modules.utils.log import logError
 from blackbird.modules.utils.parse import extractMetadata
-from json import dumps
-from urllib.parse import urlencode
 
 metadataParams = [
     {"schema": "JSON", "type": "String", "name": "User ID", "path": ["user", "pk_id"]},
@@ -152,14 +148,10 @@ def get_instagram_account_info(username, session_id, config):
             response = {"json": data}
 
             if data:
-                metadata = extractMetadata(
-                    metadataParams, response, "Instagram", config
-                )
+                metadata = extractMetadata(metadataParams, response, "Instagram", config)
                 extractedMetadata.extend(metadata)
 
-                json_data = dumps(
-                    {"q": username, "skip_recovery": "1"}, separators=(",", ":")
-                )
+                json_data = dumps({"q": username, "skip_recovery": "1"}, separators=(",", ":"))
                 data = urlencode({"signed_body": f"SIGNATURE.{json_data}"})
 
                 headers = {
@@ -179,12 +171,10 @@ def get_instagram_account_info(username, session_id, config):
                 response = {"json": data}
 
                 if data:
-                    metadata = extractMetadata(
-                        metadataParams2, response, "Instagram", config
-                    )
+                    metadata = extractMetadata(metadataParams2, response, "Instagram", config)
                     extractedMetadata.extend(metadata)
 
                 return extractedMetadata
     except Exception as e:
-        logError(e, f"[Instagram] Coudn't acquire more metadata", config)
+        logError(e, "[Instagram] Coudn't acquire more metadata", config)
         return False

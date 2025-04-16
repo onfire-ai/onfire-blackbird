@@ -1,6 +1,5 @@
-import requests
-import os
 import chardet
+import requests
 
 from blackbird.modules.utils.log import logError
 
@@ -25,9 +24,7 @@ def do_sync_request(method, url, config, data=None, customHeaders=None, cookies=
             cookies=cookies,
         )
         if config.verbose:
-            config.console.print(
-                f"  🆗 Sync HTTP Request completed [{method} - {response.status_code}] {url}"
-            )
+            config.console.print(f"  🆗 Sync HTTP Request completed [{method} - {response.status_code}] {url}")
         return response
     except Exception as e:
         if config.verbose:
@@ -58,7 +55,7 @@ async def do_async_request(method, url, session, config, data=None, customHeader
         json = None
         try:
             content = await response.text()
-        except:
+        except Exception:
             binaryContent = await response.read()
             encode = chardet.detect(binaryContent)["encoding"]
             content = binaryContent.decode(encode)
@@ -76,9 +73,7 @@ async def do_async_request(method, url, session, config, data=None, customHeader
         }
 
         if config.verbose:
-            config.console.print(
-                f"  🆗 Async HTTP Request completed [{method} - {response.status}] {url}"
-            )
+            config.console.print(f"  🆗 Async HTTP Request completed [{method} - {response.status}] {url}")
         return responseData
     except Exception as e:
         if config.verbose:

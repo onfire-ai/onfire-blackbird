@@ -1,23 +1,20 @@
-from pathlib import Path
-from rich.markup import escape
 import os
+from pathlib import Path
+
+from rich.markup import escape
 
 
 # Creates directory to save PDF, CSV and HTML content
 def createSaveDirectory(config):
     folderName = generateName(config)
 
-    strPath = os.path.join(
-        os.path.dirname(__file__), "..", "..", "..", "results", Path(folderName)
-    )
+    strPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "results", Path(folderName))
     config.saveDirectory = strPath
     path = Path(strPath)
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
         if config.verbose:
-            config.console.print(
-                escape(f"🆕 Created directory to save search data [{folderName}]")
-            )
+            config.console.print(escape(f"🆕 Created directory to save search data [{folderName}]"))
 
     if config.dump:
         if config.currentUser:
@@ -42,9 +39,7 @@ def createDumpDirectory(identifier, config):
     path = Path(strPath)
     if not path.exists():
         if config.verbose:
-            config.console.print(
-                escape(f"🆕 Created directory to save dump data [{folderName}]")
-            )
+            config.console.print(escape(f"🆕 Created directory to save dump data [{folderName}]"))
         path.mkdir(parents=True, exist_ok=True)
 
 
@@ -54,9 +49,7 @@ def createImagesDirectory(identifier, config):
     path = Path(strPath)
     if not path.exists():
         if config.verbose:
-            config.console.print(
-                escape(f"🆕 Created directory to save images [{folderName}]")
-            )
+            config.console.print(escape(f"🆕 Created directory to save images [{folderName}]"))
         path.mkdir(parents=True, exist_ok=True)
 
 

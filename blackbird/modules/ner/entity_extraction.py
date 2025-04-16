@@ -1,11 +1,11 @@
-import spacy
-from bs4 import BeautifulSoup
-from bs4 import MarkupResemblesLocatorWarning
-import warnings
+import re
 import sys
 import traceback
-import re
-import asyncio
+import warnings
+
+import spacy
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
+
 from blackbird.modules.utils.parse import download_image
 
 warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
@@ -15,11 +15,9 @@ def inialize_nlp_model(config):
     try:
         config.nlp = spacy.load("en_blackbird_osint_ner")
         config.console.print("✔️  Successfully loaded AI model (en_blackbird_osint_ner)")
-    except Exception as e:
-        config.console.print(f"❌ Could not load AI model (en_blackbird_osint_ner)")
-        config.console.print(
-            "Please install the model with `pip install en_blackbird_osint_ner`"
-        )
+    except Exception:
+        config.console.print("❌ Could not load AI model (en_blackbird_osint_ner)")
+        config.console.print("Please install the model with `pip install en_blackbird_osint_ner`")
         sys.exit()
 
 
@@ -36,7 +34,7 @@ def extract_meta_tags(html_content):
                 new_item = f"{name} - {content}"
                 meta_contents.append(new_item)
         return meta_contents
-    except Exception as e:
+    except Exception:
         return []
 
 
@@ -86,17 +84,12 @@ def extract_data_with_ai(config, site, html_content=None, json_content=None):
                         metadata_item["type"] = "Image"
 
                         if config.pdf:
-                            metadata_item = download_image(
-                                metadata_item, site["name"], config
-                            )
+                            metadata_item = download_image(metadata_item, site["name"], config)
 
                     if metadata_item["name"] == "Name":
                         metadata_item["type"] = "String"
 
-                    if not any(
-                        item["name"] == d.label_.capitalize()
-                        for item in extractedMetadata
-                    ):
+                    if not any(item["name"] == d.label_.capitalize() for item in extractedMetadata):
                         config.console.print(
                             f"      :right_arrow:  {metadata_item['name']}: {metadata_item['value']} (🤖)"
                         )

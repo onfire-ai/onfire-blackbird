@@ -1,16 +1,17 @@
+import asyncio
 import os
 import time
-import aiohttp
-import asyncio
 
-from blackbird.modules.utils.filter import filterFoundAccounts, applyFilters
-from blackbird.modules.utils.parse import extractMetadata
+import aiohttp
+
+from blackbird.modules.export.dump import dumpContent
+from blackbird.modules.utils.filter import applyFilters, filterFoundAccounts
 from blackbird.modules.utils.http_client import do_async_request
-from blackbird.modules.whatsmyname.list_operations import readList
 from blackbird.modules.utils.input import processInput
 from blackbird.modules.utils.log import logError
-from blackbird.modules.export.dump import dumpContent
+from blackbird.modules.utils.parse import extractMetadata
 from blackbird.modules.utils.precheck import perform_pre_check
+from blackbird.modules.whatsmyname.list_operations import readList
 
 
 # Verify account existence based on list args
@@ -33,47 +34,35 @@ async def checkSite(
     }
     async with semaphore:
         if site["pre_check"]:
-            authenticated_headers = perform_pre_check(
-                site["pre_check"], headers, config
-            )
+            authenticated_headers = perform_pre_check(site["pre_check"], headers, config)
             headers = authenticated_headers
-            if headers == False:
+            if headers is False:
                 returnData["status"] = "ERROR"
                 return returnData
 
         response = await do_async_request(method, url, session, config, data, headers)
-        if response == None:
+        if response is None:
             returnData["status"] = "ERROR"
             return returnData
         try:
             if response:
-                if (site["e_string"] in response["content"]) and (
-                    site["e_code"] == response["status_code"]
-                ):
-                    if (site["m_string"] not in response["content"]) and (
-                        site["m_code"] != response["status_code"]
-                    ):
+                if (site["e_string"] in response["content"]) and (site["e_code"] == response["status_code"]):
+                    if (site["m_string"] not in response["content"]) and (site["m_code"] != response["status_code"]):
                         returnData["status"] = "FOUND"
                         config.console.print(
                             f"  ✔️  \[[cyan1]{site['name']}[/cyan1]] [bright_white]{response['url']}[/bright_white]"
                         )
                         if site["metadata"]:
-                            extractedMetadata = extractMetadata(
-                                site["metadata"], response, site["name"], config
-                            )
+                            extractedMetadata = extractMetadata(site["metadata"], response, site["name"], config)
                             extractedMetadata.sort(key=lambda x: x["name"])
                             returnData["metadata"] = extractedMetadata
                         # Save response content to a .HTML file
                         if config.dump:
-                            path = os.path.join(
-                                config.saveDirectory, f"dump_{config.currentEmail}"
-                            )
+                            path = os.path.join(config.saveDirectory, f"dump_{config.currentEmail}")
 
                             result = dumpContent(path, site, response, config)
-                            if result == True and config.verbose:
-                                config.console.print(
-                                    f"      💾  Saved HTML data from found account"
-                                )
+                            if result is True and config.verbose:
+                                config.console.print("      💾  Saved HTML data from found account")
                 else:
                     returnData["status"] = "NOT-FOUND"
                     if config.verbose:
@@ -94,7 +83,7 @@ async def fetchResults(email, config):
         tasks = []
         semaphore = asyncio.Semaphore(config.max_concurrent_requests)
         for site in config.email_sites:
-            if site["input_operation"] != None:
+            if site["input_operation"] is not None:
                 email = processInput(originalEmail, site["input_operation"], config)
             else:
                 email = originalEmail
@@ -124,9 +113,7 @@ def verify_email(email, config):
     sitesToSearch = data["sites"]
     config.email_sites = applyFilters(sitesToSearch, config)
 
-    config.console.print(
-        f':play_button: Enumerating accounts with email "[cyan1]{email}[/cyan1]"'
-    )
+    config.console.print(f':play_button: Enumerating accounts with email "[cyan1]{email}[/cyan1]"')
     start_time = time.time()
     results = asyncio.run(fetchResults(email, config))
     end_time = time.time()

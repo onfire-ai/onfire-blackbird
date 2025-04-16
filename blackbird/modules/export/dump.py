@@ -1,6 +1,6 @@
+import json
 import os
 import sys
-import json
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ""))
 
@@ -33,5 +33,5 @@ def dumpContent(path, site, response, config):
                 file.write(content)
         return True
     except Exception as e:
-        logError(e, f"Coudn't DUMP data to HTML file!", config)
+        logError(e, "Coudn't DUMP data to HTML file!", config)
         return False

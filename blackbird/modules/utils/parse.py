@@ -1,6 +1,7 @@
-from blackbird.modules.utils.http_client import do_sync_request
-import re
 import os
+import re
+
+from blackbird.modules.utils.http_client import do_sync_request
 
 
 def access_json_property(data, path_config):
@@ -9,7 +10,7 @@ def access_json_property(data, path_config):
         for key in path_config:
             property_value = property_value[key]
         return property_value
-    except:
+    except Exception:
         return False
 
 
@@ -18,7 +19,7 @@ def access_html_regex(data, pattern):
         match = re.search(pattern, data)
         if match:
             return match.group(1).replace("\n", "")
-    except:
+    except Exception:
         return False
 
 
@@ -66,9 +67,7 @@ def extractMetadata(metadata, response, site, config):
                     metadataReturn["value"] = prefix + returnValue
                 else:
                     metadataReturn["value"] = returnValue
-                config.console.print(
-                    f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}"
-                )
+                config.console.print(f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}")
             elif params["type"] == "Array" and returnValue:
                 metadataReturn["value"] = []
                 config.console.print(f"      :right_arrow:  {metadataReturn['name']}:")
@@ -82,9 +81,7 @@ def extractMetadata(metadata, response, site, config):
                     metadataReturn["value"] = prefix + returnValue
                 else:
                     metadataReturn["value"] = returnValue
-                config.console.print(
-                    f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}"
-                )
+                config.console.print(f"      :right_arrow:  {metadataReturn['name']}: {metadataReturn['value']}")
                 if config.pdf:
                     metadataReturn = download_image(metadataReturn, site, config)
             extractedMetadata.append(metadataReturn)

@@ -1,13 +1,13 @@
-import sys
-import os
 import json
+import os
+from datetime import datetime
+
 from rich.console import Console
 
 from blackbird import config
 from blackbird.modules.export.csv import saveToCsv
-from blackbird.modules.export.pdf import saveToPdf
 from blackbird.modules.export.file_operations import createSaveDirectory
-from datetime import datetime
+from blackbird.modules.export.pdf import saveToPdf
 
 config.console = Console()
 

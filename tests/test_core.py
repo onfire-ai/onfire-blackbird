@@ -1,12 +1,9 @@
-import sys
-import os
+from datetime import datetime
+
 from rich.console import Console
 
-from blackbird import config
-from blackbird import verify_username
-from blackbird import verify_email
+from blackbird import config, verify_email, verify_username
 from blackbird.modules.utils.userAgent import getRandomUserAgent
-from datetime import datetime
 from blackbird.modules.whatsmyname.list_operations import checkUpdates
 
 config.no_nsfw = None
@@ -25,6 +22,7 @@ config.dateRaw = datetime.now().strftime("%m_%d_%Y")
 config.datePretty = datetime.now().strftime("%B %d, %Y")
 
 checkUpdates(config)
+
 
 def test_verify_email():
     config.currentEmail = "john@gmail.com"

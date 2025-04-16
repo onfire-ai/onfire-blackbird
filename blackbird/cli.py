@@ -1,22 +1,23 @@
-import os
 import argparse
-from rich.console import Console
 import logging
+import os
 import sys
 from datetime import datetime
 
-from blackbird import config
-from blackbird.modules.whatsmyname.list_operations import checkUpdates
-from blackbird.modules.core.username import verify_username
-from blackbird.modules.core.email import verify_email
-from blackbird.modules.utils.userAgent import getRandomUserAgent
-from blackbird.modules.export.file_operations import createSaveDirectory
-from blackbird.modules.export.csv import saveToCsv
-from blackbird.modules.export.pdf import saveToPdf
-from blackbird.modules.utils.file_operations import isFile, getLinesFromFile
-from blackbird.modules.utils.permute import Permute
-from blackbird.modules.ner.entity_extraction import inialize_nlp_model
 from dotenv import load_dotenv
+from rich.console import Console
+
+from blackbird import config
+from blackbird.modules.core.email import verify_email
+from blackbird.modules.core.username import verify_username
+from blackbird.modules.export.csv import saveToCsv
+from blackbird.modules.export.file_operations import createSaveDirectory
+from blackbird.modules.export.pdf import saveToPdf
+from blackbird.modules.ner.entity_extraction import inialize_nlp_model
+from blackbird.modules.utils.file_operations import getLinesFromFile, isFile
+from blackbird.modules.utils.permute import Permute
+from blackbird.modules.utils.userAgent import getRandomUserAgent
+from blackbird.modules.whatsmyname.list_operations import checkUpdates
 
 load_dotenv()
 
@@ -51,9 +52,7 @@ def initiate():
         action="store_true",
         help="Permute usernames, ignoring single elements.",
     )
-    parser.add_argument(
-        "--permuteall", action="store_true", help="Permute usernames, all elements."
-    )
+    parser.add_argument("--permuteall", action="store_true", help="Permute usernames, all elements.")
     parser.add_argument(
         "-e",
         "--email",
@@ -96,12 +95,8 @@ def initiate():
         "--filter",
         help='Filter sites to be searched by list property value.E.g --filter "cat=social"',
     )
-    parser.add_argument(
-        "--no-nsfw", action="store_true", help="Removes NSFW sites from the search."
-    )
-    parser.add_argument(
-        "--dump", action="store_true", help="Dump HTML content for found accounts."
-    )
+    parser.add_argument("--no-nsfw", action="store_true", help="Removes NSFW sites from the search.")
+    parser.add_argument("--dump", action="store_true", help="Dump HTML content for found accounts.")
     parser.add_argument("--proxy", help="Proxy to send HTTP requests though.")
     parser.add_argument(
         "--timeout",
@@ -115,12 +110,8 @@ def initiate():
         default=30,
         help="Specify the maximum number of concurrent requests allowed. Default is 30.",
     )
-    parser.add_argument(
-        "--no-update", action="store_true", help="Don't update sites lists."
-    )
-    parser.add_argument(
-        "--about", action="store_true", help="Show about information and exit."
-    )
+    parser.add_argument("--no-update", action="store_true", help="Don't update sites lists.")
+    parser.add_argument("--about", action="store_true", help="Show about information and exit.")
     args = parser.parse_args()
 
     # Store the necessary arguments to config Object
@@ -162,16 +153,16 @@ def main():
     initiate()
     config.console.print(
         """[red]
-    ▄▄▄▄    ██▓    ▄▄▄       ▄████▄   ██ ▄█▀ ▄▄▄▄    ██▓ ██▀███  ▓█████▄ 
+    ▄▄▄▄    ██▓    ▄▄▄       ▄████▄   ██ ▄█▀ ▄▄▄▄    ██▓ ██▀███  ▓█████▄
     ▓█████▄ ▓██▒   ▒████▄    ▒██▀ ▀█   ██▄█▒ ▓█████▄ ▓██▒▓██ ▒ ██▒▒██▀ ██▌
     ▒██▒ ▄██▒██░   ▒██  ▀█▄  ▒▓█    ▄ ▓███▄░ ▒██▒ ▄██▒██▒▓██ ░▄█ ▒░██   █▌
     ▒██░█▀  ▒██░   ░██▄▄▄▄██ ▒▓▓▄ ▄██▒▓██ █▄ ▒██░█▀  ░██░▒██▀▀█▄  ░▓█▄   ▌
-    ░▓█  ▀█▓░██████▒▓█   ▓██▒▒ ▓███▀ ░▒██▒ █▄░▓█  ▀█▓░██░░██▓ ▒██▒░▒████▓ 
-    ░▒▓███▀▒░ ▒░▓  ░▒▒   ▓▒█░░ ░▒ ▒  ░▒ ▒▒ ▓▒░▒▓███▀▒░▓  ░ ▒▓ ░▒▓░ ▒▒▓  ▒ 
-    ▒░▒   ░ ░ ░ ▒  ░ ▒   ▒▒ ░  ░  ▒   ░ ░▒ ▒░▒░▒   ░  ▒ ░  ░▒ ░ ▒░ ░ ▒  ▒ 
-    ░    ░   ░ ░    ░   ▒   ░        ░ ░░ ░  ░    ░  ▒ ░  ░░   ░  ░ ░  ░ 
-    ░          ░  ░     ░  ░░ ░      ░  ░    ░       ░     ░        ░    
-        ░                  ░                     ░               ░      
+    ░▓█  ▀█▓░██████▒▓█   ▓██▒▒ ▓███▀ ░▒██▒ █▄░▓█  ▀█▓░██░░██▓ ▒██▒░▒████▓
+    ░▒▓███▀▒░ ▒░▓  ░▒▒   ▓▒█░░ ░▒ ▒  ░▒ ▒▒ ▓▒░▒▓███▀▒░▓  ░ ▒▓ ░▒▓░ ▒▒▓  ▒
+    ▒░▒   ░ ░ ░ ▒  ░ ▒   ▒▒ ░  ░  ▒   ░ ░▒ ▒░▒░▒   ░  ▒ ░  ░▒ ░ ▒░ ░ ▒  ▒
+    ░    ░   ░ ░    ░   ▒   ░        ░ ░░ ░  ░    ░  ▒ ░  ░░   ░  ░ ░  ░
+    ░          ░  ░     ░  ░░ ░      ░  ░    ░       ░     ░        ░
+        ░                  ░                     ░               ░
 
     [/red]"""
     )
@@ -189,12 +180,7 @@ def main():
         )
         sys.exit()
 
-    if (
-        not config.username
-        and not config.email
-        and not config.username_file
-        and not config.email_file
-    ):
+    if not config.username and not config.email and not config.username_file and not config.email_file:
         config.console.print("Either --username or --email is required")
         sys.exit()
     if not config.username and (config.permute or config.permuteall):
@@ -244,9 +230,7 @@ def main():
     if config.email_file:
         if isFile(config.email_file):
             config.email = getLinesFromFile(config.email_file)
-            config.console.print(
-                f':glasses: Successfully loaded {len(config.email)} emails from "{config.email_file}"'
-            )
+            config.console.print(f':glasses: Successfully loaded {len(config.email)} emails from "{config.email_file}"')
         else:
             config.console.print(f'❌ Could not read file "{config.email_file}"')
             sys.exit()
