@@ -73,7 +73,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.PACKAGE_VERSION = onfire.parseVersion(params.BRANCH, params.ENV)
+                    env.PACKAGE_VERSION = onfire.parseVersion(params.BRANCH, params.ENV, env.PACKAGE_VERSION)
                     sh "poetry version ${env.PACKAGE_VERSION}"
                 }
             }
