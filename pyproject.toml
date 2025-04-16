@@ -51,7 +51,6 @@ blackbird = "blackbird.cli:main"
 
 [tool.black]
 line-length = 120
-skip-magic-trailing-comma = true
 
 [tool.isort]
 profile = "black"
