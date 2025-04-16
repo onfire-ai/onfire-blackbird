@@ -260,7 +260,6 @@ results/
 !results/example.json
 /Scripts
 pyvenv.cfg
-wmn-data.json
 *.csv
 *.pdf
 logs/*.log
