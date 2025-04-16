@@ -75,6 +75,7 @@ pipeline {
                 script {
                     env.PACKAGE_VERSION = onfire.parseVersion(params.BRANCH, params.ENV, env.PACKAGE_VERSION)
                     sh "poetry version ${env.PACKAGE_VERSION}"
+                    echo "New Package Version: ${env.PACKAGE_VERSION}"
                 }
             }
         }
@@ -90,21 +91,13 @@ pipeline {
             }
         }
 
-        stage('Build Package') {
-            when {
-                expression { params.DEPLOY == true }
-            }
-            steps {
-                sh 'poetry build'
-            }
-        }
-
         stage('Publish Package to CodeArtifact') {
             when {
                 expression { params.DEPLOY == true }
             }
             steps {
                 script {
+                    sh 'poetry build'
                     def publish_result = onfire.publishToCodeartifact()
                     echo "Publish Result: ${publish_result}"
                 }
