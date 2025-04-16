@@ -18,8 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 packages = [
-    {include = "blackbird"},
-    {include = "data", format = "sdist"}
+    {include = "blackbird"}
 ] # Tells Poetry where the package code is
 
 include = ["data/**/*"]
