@@ -1,6 +1,6 @@
 import asyncio
-import os
 import time
+from pathlib import Path
 
 import aiohttp
 
@@ -43,7 +43,7 @@ async def check_site(site, method, url, session, semaphore, config, data=None, h
                             returnData["metadata"] = extractedMetadata
                         # Save response content to a .HTML file
                         if config.dump:
-                            path = os.path.join(config.saveDirectory, f"dump_{config.currentEmail}")
+                            path = Path(config.saveDirectory) / f"dump_{config.currentEmail}"
 
                             result = dump_content(path, site, response, config)
                             if result is True and config.verbose:

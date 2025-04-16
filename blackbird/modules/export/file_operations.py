@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from rich.markup import escape
@@ -8,11 +7,10 @@ from rich.markup import escape
 def create_save_directory(config):
     folderName = generate_name(config)
 
-    strPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "results", Path(folderName))
-    config.saveDirectory = strPath
-    path = Path(strPath)
-    if not path.exists():
-        path.mkdir(parents=True, exist_ok=True)
+    strPath = Path(__file__).parent.parent.parent.parent / "results" / folderName
+    config.saveDirectory = str(strPath)
+    if not strPath.exists():
+        strPath.mkdir(parents=True, exist_ok=True)
         if config.verbose:
             config.console.print(escape(f"🆕 Created directory to save search data [{folderName}]"))
 
@@ -35,22 +33,20 @@ def create_save_directory(config):
 
 def create_dump_directory(identifier, config):
     folderName = f"dump_{identifier}"
-    strPath = os.path.join(config.saveDirectory, folderName)
-    path = Path(strPath)
-    if not path.exists():
+    strPath = Path(config.saveDirectory) / folderName
+    if not strPath.exists():
         if config.verbose:
             config.console.print(escape(f"🆕 Created directory to save dump data [{folderName}]"))
-        path.mkdir(parents=True, exist_ok=True)
+        strPath.mkdir(parents=True, exist_ok=True)
 
 
 def create_images_directory(identifier, config):
     folderName = f"images_{identifier}"
-    strPath = os.path.join(config.saveDirectory, folderName)
-    path = Path(strPath)
-    if not path.exists():
+    strPath = Path(config.saveDirectory) / folderName
+    if not strPath.exists():
         if config.verbose:
             config.console.print(escape(f"🆕 Created directory to save images [{folderName}]"))
-        path.mkdir(parents=True, exist_ok=True)
+        strPath.mkdir(parents=True, exist_ok=True)
 
 
 def generate_name(config, extension=None):

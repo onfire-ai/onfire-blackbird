@@ -2,6 +2,7 @@ import asyncio
 import os
 import sys
 import time
+from pathlib import Path
 
 import aiohttp
 
@@ -63,8 +64,7 @@ async def check_site(site, method, url, session, semaphore, config):
 
                         # Save response content to a .HTML file
                         if config.dump:
-                            path = os.path.join(config.saveDirectory, f"dump_{config.currentUser}")
-
+                            path = Path(config.saveDirectory) / f"dump_{config.currentUser}"
                             result = dump_content(path, site, response, config)
                             if result is True and config.verbose:
                                 config.console.print("      💾  Saved HTML data from found account")

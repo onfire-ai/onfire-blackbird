@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
@@ -11,23 +11,24 @@ from blackbird.modules.utils.log import log_error
 
 
 def save_to_pdf(foundAccounts, resultType, config):
-    regularFontFile = os.path.join(
-        os.getcwd(), config.ASSETS_DIRECTORY, config.FONTS_DIRECTORY, config.FONT_REGULAR_FILE
-    )
-    boldFontFile = os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.FONTS_DIRECTORY, config.FONT_BOLD_FILE)
+    assets_path = Path(__file__).parent.parent.parent.parent / config.ASSETS_DIRECTORY
+
+    regularFontFile = assets_path / config.FONTS_DIRECTORY / config.FONT_REGULAR_FILE
+    boldFontFile = assets_path / config.FONTS_DIRECTORY / config.FONT_BOLD_FILE
+
     try:
-        pdfmetrics.registerFont(TTFont(config.FONT_NAME_REGULAR, regularFontFile))
-        pdfmetrics.registerFont(TTFont(config.FONT_NAME_BOLD, boldFontFile))
+        pdfmetrics.registerFont(TTFont(config.FONT_NAME_REGULAR, str(regularFontFile)))
+        pdfmetrics.registerFont(TTFont(config.FONT_NAME_BOLD, str(boldFontFile)))
 
         fileName = generate_name(config, "pdf")
-        path = os.path.join(config.saveDirectory, fileName)
+        path = Path(config.saveDirectory) / fileName
 
         width, height = letter
-        canva = canvas.Canvas(path, pagesize=letter)
+        canva = canvas.Canvas(str(path), pagesize=letter)
         accountsCount = len(foundAccounts)
 
         canva.drawImage(
-            os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "blackbird-logo.png"),
+            str(assets_path / config.IMAGES_DIRECTORY / "blackbird-logo.png"),
             35,
             height - 90,
             width=60,
@@ -50,7 +51,7 @@ def save_to_pdf(foundAccounts, resultType, config):
             identifier = config.currentEmail
         identifierWidth = stringWidth(identifier, config.FONT_NAME_BOLD, 11)
         canva.drawImage(
-            os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "correct.png"),
+            str(assets_path / config.IMAGES_DIRECTORY / "correct.png"),
             (width / 2) - ((identifierWidth / 2) + 15),
             height - 147,
             width=10,
@@ -66,7 +67,7 @@ def save_to_pdf(foundAccounts, resultType, config):
         canva.setFillColor("#57523f")
         canva.setFont(config.FONT_NAME_REGULAR, 8)
         canva.drawImage(
-            os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "warning.png"),
+            str(assets_path / config.IMAGES_DIRECTORY / "warning.png"),
             55,
             height - 197,
             width=10,
@@ -79,7 +80,7 @@ def save_to_pdf(foundAccounts, resultType, config):
             canva.setFillColor("#000000")
             canva.setFont(config.FONT_NAME_REGULAR, 15)
             canva.drawImage(
-                os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "arrow.png"),
+                str(assets_path / config.IMAGES_DIRECTORY / "arrow.png"),
                 40,
                 height - 240,
                 width=12,
@@ -99,7 +100,7 @@ def save_to_pdf(foundAccounts, resultType, config):
 
                 siteWidth = stringWidth(f"{result['name']}", config.FONT_NAME_BOLD, 12)
                 canva.drawImage(
-                    os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "link.png"),
+                    str(assets_path / config.IMAGES_DIRECTORY / "link.png"),
                     77 + siteWidth,
                     y_position,
                     width=10,
@@ -149,10 +150,10 @@ def save_to_pdf(foundAccounts, resultType, config):
                                     try:
                                         y_position -= 25
                                         canva.drawImage(
-                                            os.path.join(
-                                                config.saveDirectory,
-                                                f"images_{identifier}",
-                                                f"{result['name']}_image.jpg",
+                                            str(
+                                                Path(config.saveDirectory)
+                                                / f"images_{identifier}"
+                                                / f"{result['name']}_image.jpg"
                                             ),
                                             90,
                                             y_position,

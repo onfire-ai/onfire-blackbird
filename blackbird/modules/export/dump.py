@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from pathlib import Path
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ""))
 
@@ -22,10 +23,10 @@ def dump_content(path, site, response, config):
             content = response["content"]
 
     fileName = f"{siteName}.{extension}"
-    path = os.path.join(path, fileName)
+    file_path = Path(path) / fileName
 
     try:
-        with open(path, "w", encoding="utf-8") as file:
+        with open(file_path, "w", encoding="utf-8") as file:
             if response["json"]:
                 json.dump(content, file)
             else:

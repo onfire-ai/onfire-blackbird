@@ -1,4 +1,4 @@
-@Library('onfire-shared-library@royravid/dash-253-ds-jenkins-build-and-run-in-one-pipeline') _
+@Library('onfire-shared-library') _
 
 import groovy.json.JsonSlurper
 

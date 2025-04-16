@@ -1,7 +1,4 @@
-import os
 import re
-
-from blackbird.modules.utils.http_client import do_sync_request
 
 
 def access_json_property(data, path_config):
@@ -23,19 +20,28 @@ def access_html_regex(data, pattern):
         return False
 
 
-def download_image(metadataReturn, site, config):
-    response = do_sync_request("GET", metadataReturn["value"], config)
-    if config.currentUser:
-        path = os.path.join(config.saveDirectory, f"images_{config.currentUser}", f"{site}_image.jpg")
-    elif config.currentEmail:
-        path = os.path.join(config.saveDirectory, f"images_{config.currentEmail}", f"{site}_image.jpg")
+def download_image(link, site, config):
+    if link:
+        try:
+            import requests
 
-    if "image" in response.headers["Content-Type"]:
-        with open(path, "wb") as file:
-            file.write(response.content)
-            metadataReturn["downloaded"] = True
+            response = requests.get(link, headers={}, stream=True, timeout=5)
 
-    return metadataReturn
+            if response.status_code == 200:
+                from pathlib import Path
+
+                if config.currentUser:
+                    path = Path(config.saveDirectory) / f"images_{config.currentUser}" / f"{site}_image.jpg"
+                else:
+                    path = Path(config.saveDirectory) / f"images_{config.currentEmail}" / f"{site}_image.jpg"
+
+                with open(path, "wb") as file:
+                    for chunk in response:
+                        file.write(chunk)
+                return True
+        except Exception:
+            return False
+    return None
 
 
 def extract_metadata(metadata, response, site, config):

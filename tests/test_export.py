@@ -1,6 +1,6 @@
 import json
-import os
 from datetime import datetime
+from pathlib import Path
 
 from rich.console import Console
 
@@ -28,7 +28,7 @@ def test_export_pdf():
     config.csv = False
     config.currentUser = None
     create_save_directory(config)
-    with open(os.path.join(os.getcwd(), "tests", "data", "mock-email.json"), "r", encoding="UTF-8") as f:
+    with open(Path(__file__).parent / "data" / "mock-email.json", "r", encoding="UTF-8") as f:
         foundAccounts = json.load(f)
     result = save_to_pdf(foundAccounts, "email", config)
     assert result
@@ -40,7 +40,7 @@ def test_export_csv():
     config.csv = True
     config.currentEmail = None
     create_save_directory(config)
-    with open(os.path.join(os.getcwd(), "tests", "data", "mock-username.json"), "r", encoding="UTF-8") as f:
+    with open(Path(__file__).parent / "data" / "mock-username.json", "r", encoding="UTF-8") as f:
         foundAccounts = json.load(f)
     result = save_to_csv(foundAccounts, config)
     assert result
