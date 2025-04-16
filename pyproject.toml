@@ -17,7 +17,12 @@ classifiers = [
     "License :: OSI Approved :: MIT License", # Match license field
     "Operating System :: OS Independent",
 ]
-packages = [{include = "blackbird"}] # Tells Poetry where the package code is
+packages = [
+    {include = "blackbird"},
+    {include = "data", format = "sdist"}
+] # Tells Poetry where the package code is
+
+include = ["data/**/*"]
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4" # Constrained upper bound for compatibility
