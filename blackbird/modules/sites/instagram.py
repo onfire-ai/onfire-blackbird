@@ -7,102 +7,27 @@ from blackbird.modules.utils.parse import extractMetadata
 
 metadataParams = [
     {"schema": "JSON", "type": "String", "name": "User ID", "path": ["user", "pk_id"]},
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Full Name",
-        "path": ["user", "full_name"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Biography",
-        "path": ["user", "biography"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Follower Count",
-        "path": ["user", "follower_count"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Following Count",
-        "path": ["user", "following_count"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "External URL",
-        "path": ["user", "external_url"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Category",
-        "path": ["user", "category"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Is Verified",
-        "path": ["user", "is_verified"],
-    },
+    {"schema": "JSON", "type": "String", "name": "Full Name", "path": ["user", "full_name"]},
+    {"schema": "JSON", "type": "String", "name": "Biography", "path": ["user", "biography"]},
+    {"schema": "JSON", "type": "String", "name": "Follower Count", "path": ["user", "follower_count"]},
+    {"schema": "JSON", "type": "String", "name": "Following Count", "path": ["user", "following_count"]},
+    {"schema": "JSON", "type": "String", "name": "External URL", "path": ["user", "external_url"]},
+    {"schema": "JSON", "type": "String", "name": "Category", "path": ["user", "category"]},
+    {"schema": "JSON", "type": "String", "name": "Is Verified", "path": ["user", "is_verified"]},
 ]
 
 metadataParams2 = [
     {"schema": "JSON", "type": "String", "name": "Email Sent", "path": ["email_sent"]},
     {"schema": "JSON", "type": "String", "name": "SMS Sent", "path": ["sms_sent"]},
     {"schema": "JSON", "type": "String", "name": "WhatsApp Sent", "path": ["wa_sent"]},
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Obfuscated Email",
-        "path": ["obfuscated_email"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Obfuscated Phone",
-        "path": ["obfuscated_phone"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Is Private",
-        "path": ["user", "is_private"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Has Valid Phone",
-        "path": ["has_valid_phone"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Can Email Reset",
-        "path": ["can_email_reset"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Can SMS Reset",
-        "path": ["can_sms_reset"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Can WhatsApp Reset",
-        "path": ["can_wa_reset"],
-    },
-    {
-        "schema": "JSON",
-        "type": "String",
-        "name": "Facebook Login Option",
-        "path": ["fb_login_option"],
-    },
+    {"schema": "JSON", "type": "String", "name": "Obfuscated Email", "path": ["obfuscated_email"]},
+    {"schema": "JSON", "type": "String", "name": "Obfuscated Phone", "path": ["obfuscated_phone"]},
+    {"schema": "JSON", "type": "String", "name": "Is Private", "path": ["user", "is_private"]},
+    {"schema": "JSON", "type": "String", "name": "Has Valid Phone", "path": ["has_valid_phone"]},
+    {"schema": "JSON", "type": "String", "name": "Can Email Reset", "path": ["can_email_reset"]},
+    {"schema": "JSON", "type": "String", "name": "Can SMS Reset", "path": ["can_sms_reset"]},
+    {"schema": "JSON", "type": "String", "name": "Can WhatsApp Reset", "path": ["can_wa_reset"]},
+    {"schema": "JSON", "type": "String", "name": "Facebook Login Option", "path": ["fb_login_option"]},
     {"schema": "JSON", "type": "String", "name": "Status", "path": ["status"]},
 ]
 

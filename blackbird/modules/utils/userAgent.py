@@ -3,14 +3,7 @@ import random
 
 
 def getRandomUserAgent(config):
-    path = os.path.join(
-        os.path.join(os.path.dirname(__file__)),
-        "..",
-        "..",
-        "..",
-        "data",
-        "useragents.txt",
-    )
+    path = os.path.join(os.path.join(os.path.dirname(__file__)), "..", "..", "..", "data", "useragents.txt")
     userAgents = open(path).read().splitlines()
     userAgent = random.choice(userAgents)
     if config.verbose:

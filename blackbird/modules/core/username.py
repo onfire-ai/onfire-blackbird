@@ -18,21 +18,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 # Verify account existence based on list args
-async def checkSite(
-    site,
-    method,
-    url,
-    session,
-    semaphore,
-    config,
-):
-    returnData = {
-        "name": site["name"],
-        "url": url,
-        "category": site["cat"],
-        "status": "NONE",
-        "metadata": None,
-    }
+async def checkSite(site, method, url, session, semaphore, config):
+    returnData = {"name": site["name"], "url": url, "category": site["cat"], "status": "NONE", "metadata": None}
     extractedMetadata = []
 
     async with semaphore:
@@ -53,10 +40,7 @@ async def checkSite(
 
                         if site["name"] in config.metadata_params["sites"]:
                             metadata = extractMetadata(
-                                config.metadata_params["sites"][site["name"]],
-                                response,
-                                site["name"],
-                                config,
+                                config.metadata_params["sites"][site["name"]], response, site["name"], config
                             )
                             extractedMetadata.extend(metadata)
 
@@ -67,9 +51,7 @@ async def checkSite(
                         if site["name"] == "Instagram":
                             if config.instagram_session_id:
                                 metadata = get_instagram_account_info(
-                                    config.currentUser,
-                                    config.instagram_session_id,
-                                    config,
+                                    config.currentUser, config.instagram_session_id, config
                                 )
                                 extractedMetadata.sort(key=lambda x: x["name"])
                                 extractedMetadata.extend(metadata)

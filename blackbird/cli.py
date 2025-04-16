@@ -26,83 +26,36 @@ def initiate():
     if not os.path.exists("logs/"):
         os.makedirs("logs/")
     logging.basicConfig(
-        filename=config.LOG_PATH,
-        level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        filename=config.LOG_PATH, level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
     parser = argparse.ArgumentParser(
-        prog="blackbird",
-        description="An OSINT tool to search for accounts by username in social networks.",
+        prog="blackbird", description="An OSINT tool to search for accounts by username in social networks."
     )
-    parser.add_argument(
-        "-u",
-        "--username",
-        nargs="*",
-        type=str,
-        help="One or more usernames to search.",
-    )
-    parser.add_argument(
-        "-uf",
-        "--username-file",
-        help="The list of usernames to be searched.",
-    )
-    parser.add_argument(
-        "--permute",
-        action="store_true",
-        help="Permute usernames, ignoring single elements.",
-    )
+    parser.add_argument("-u", "--username", nargs="*", type=str, help="One or more usernames to search.")
+    parser.add_argument("-uf", "--username-file", help="The list of usernames to be searched.")
+    parser.add_argument("--permute", action="store_true", help="Permute usernames, ignoring single elements.")
     parser.add_argument("--permuteall", action="store_true", help="Permute usernames, all elements.")
+    parser.add_argument("-e", "--email", nargs="*", type=str, help="One or more email to search.")
+    parser.add_argument("-ef", "--email-file", help="The list of emails to be searched.")
     parser.add_argument(
-        "-e",
-        "--email",
-        nargs="*",
-        type=str,
-        help="One or more email to search.",
+        "--csv", default=False, action=argparse.BooleanOptionalAction, help="Generate a CSV with the results."
     )
     parser.add_argument(
-        "-ef",
-        "--email-file",
-        help="The list of emails to be searched.",
+        "--pdf", default=False, action=argparse.BooleanOptionalAction, help="Generate a PDF with the results."
     )
     parser.add_argument(
-        "--csv",
-        default=False,
-        action=argparse.BooleanOptionalAction,
-        help="Generate a CSV with the results.",
+        "-v", "--verbose", default=False, action=argparse.BooleanOptionalAction, help="Show verbose output."
     )
     parser.add_argument(
-        "--pdf",
-        default=False,
-        action=argparse.BooleanOptionalAction,
-        help="Generate a PDF with the results.",
+        "-ai", "--ai", default=False, action=argparse.BooleanOptionalAction, help="Extract Metadata with AI."
     )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        default=False,
-        action=argparse.BooleanOptionalAction,
-        help="Show verbose output.",
-    )
-    parser.add_argument(
-        "-ai",
-        "--ai",
-        default=False,
-        action=argparse.BooleanOptionalAction,
-        help="Extract Metadata with AI.",
-    )
-    parser.add_argument(
-        "--filter",
-        help='Filter sites to be searched by list property value.E.g --filter "cat=social"',
-    )
+    parser.add_argument("--filter", help='Filter sites to be searched by list property value.E.g --filter "cat=social"')
     parser.add_argument("--no-nsfw", action="store_true", help="Removes NSFW sites from the search.")
     parser.add_argument("--dump", action="store_true", help="Dump HTML content for found accounts.")
     parser.add_argument("--proxy", help="Proxy to send HTTP requests though.")
     parser.add_argument(
-        "--timeout",
-        type=int,
-        default=30,
-        help="Timeout in seconds for each HTTP request (Default is 30).",
+        "--timeout", type=int, default=30, help="Timeout in seconds for each HTTP request (Default is 30)."
     )
     parser.add_argument(
         "--max-concurrent-requests",

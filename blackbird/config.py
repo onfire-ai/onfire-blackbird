@@ -4,15 +4,11 @@ import os
 LIST_DIRECTORY = "data"
 
 # Username List
-USERNAME_LIST_URL = (
-    "https://raw.githubusercontent.com/WebBreacher/WhatsMyName/main/wmn-data.json"
-)
+USERNAME_LIST_URL = "https://raw.githubusercontent.com/WebBreacher/WhatsMyName/main/wmn-data.json"
 USERNAME_LIST_FILENAME = "wmn-data.json"
 USERNAME_LIST_PATH = os.path.join(os.getcwd(), LIST_DIRECTORY, USERNAME_LIST_FILENAME)
 USERNAME_METADATA_LIST_FILENAME = "wmn-metadata.json"
-USERNAME_METADATA_LIST_PATH = os.path.join(
-    os.getcwd(), LIST_DIRECTORY, USERNAME_METADATA_LIST_FILENAME
-)
+USERNAME_METADATA_LIST_PATH = os.path.join(os.getcwd(), LIST_DIRECTORY, USERNAME_METADATA_LIST_FILENAME)
 
 # Email List
 EMAIL_LIST_FILENAME = "email-data.json"

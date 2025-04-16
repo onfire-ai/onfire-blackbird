@@ -26,17 +26,9 @@ def access_html_regex(data, pattern):
 def download_image(metadataReturn, site, config):
     response = do_sync_request("GET", metadataReturn["value"], config)
     if config.currentUser:
-        path = os.path.join(
-            config.saveDirectory,
-            f"images_{config.currentUser}",
-            f"{site}_image.jpg",
-        )
+        path = os.path.join(config.saveDirectory, f"images_{config.currentUser}", f"{site}_image.jpg")
     elif config.currentEmail:
-        path = os.path.join(
-            config.saveDirectory,
-            f"images_{config.currentEmail}",
-            f"{site}_image.jpg",
-        )
+        path = os.path.join(config.saveDirectory, f"images_{config.currentEmail}", f"{site}_image.jpg")
 
     if "image" in response.headers["Content-Type"]:
         with open(path, "wb") as file:

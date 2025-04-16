@@ -14,17 +14,9 @@ from blackbird.modules.utils.log import logError
 
 def saveToPdf(foundAccounts, resultType, config):
     regularFontFile = os.path.join(
-        os.getcwd(),
-        config.ASSETS_DIRECTORY,
-        config.FONTS_DIRECTORY,
-        config.FONT_REGULAR_FILE,
+        os.getcwd(), config.ASSETS_DIRECTORY, config.FONTS_DIRECTORY, config.FONT_REGULAR_FILE
     )
-    boldFontFile = os.path.join(
-        os.getcwd(),
-        config.ASSETS_DIRECTORY,
-        config.FONTS_DIRECTORY,
-        config.FONT_BOLD_FILE,
-    )
+    boldFontFile = os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.FONTS_DIRECTORY, config.FONT_BOLD_FILE)
     try:
         pdfmetrics.registerFont(TTFont(config.FONT_NAME_REGULAR, regularFontFile))
         pdfmetrics.registerFont(TTFont(config.FONT_NAME_BOLD, boldFontFile))
@@ -37,12 +29,7 @@ def saveToPdf(foundAccounts, resultType, config):
         accountsCount = len(foundAccounts)
 
         canva.drawImage(
-            os.path.join(
-                os.getcwd(),
-                config.ASSETS_DIRECTORY,
-                config.IMAGES_DIRECTORY,
-                "blackbird-logo.png",
-            ),
+            os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "blackbird-logo.png"),
             35,
             height - 90,
             width=60,
@@ -53,11 +40,7 @@ def saveToPdf(foundAccounts, resultType, config):
         canva.setFont(config.FONT_NAME_REGULAR, 7)
         canva.drawString(width - 90, height - 70, config.datePretty)
         canva.setFont(config.FONT_NAME_REGULAR, 5)
-        canva.drawString(
-            width - 185,
-            height - 25,
-            "This report was generated using the Blackbird OSINT Tool.",
-        )
+        canva.drawString(width - 185, height - 25, "This report was generated using the Blackbird OSINT Tool.")
 
         canva.setFillColor("#EDEBED")
         canva.setStrokeColor("#BAB8BA")
@@ -69,12 +52,7 @@ def saveToPdf(foundAccounts, resultType, config):
             identifier = config.currentEmail
         identifierWidth = stringWidth(identifier, config.FONT_NAME_BOLD, 11)
         canva.drawImage(
-            os.path.join(
-                os.getcwd(),
-                config.ASSETS_DIRECTORY,
-                config.IMAGES_DIRECTORY,
-                "correct.png",
-            ),
+            os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "correct.png"),
             (width / 2) - ((identifierWidth / 2) + 15),
             height - 147,
             width=10,
@@ -90,34 +68,20 @@ def saveToPdf(foundAccounts, resultType, config):
         canva.setFillColor("#57523f")
         canva.setFont(config.FONT_NAME_REGULAR, 8)
         canva.drawImage(
-            os.path.join(
-                os.getcwd(),
-                config.ASSETS_DIRECTORY,
-                config.IMAGES_DIRECTORY,
-                "warning.png",
-            ),
+            os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "warning.png"),
             55,
             height - 197,
             width=10,
             height=10,
             mask="auto",
         )
-        canva.drawString(
-            70,
-            height - 195,
-            "Blackbird can make mistakes. Consider checking the information.",
-        )
+        canva.drawString(70, height - 195, "Blackbird can make mistakes. Consider checking the information.")
 
         if accountsCount >= 1:
             canva.setFillColor("#000000")
             canva.setFont(config.FONT_NAME_REGULAR, 15)
             canva.drawImage(
-                os.path.join(
-                    os.getcwd(),
-                    config.ASSETS_DIRECTORY,
-                    config.IMAGES_DIRECTORY,
-                    "arrow.png",
-                ),
+                os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "arrow.png"),
                 40,
                 height - 240,
                 width=12,
@@ -137,12 +101,7 @@ def saveToPdf(foundAccounts, resultType, config):
 
                 siteWidth = stringWidth(f"{result['name']}", config.FONT_NAME_BOLD, 12)
                 canva.drawImage(
-                    os.path.join(
-                        os.getcwd(),
-                        config.ASSETS_DIRECTORY,
-                        config.IMAGES_DIRECTORY,
-                        "link.png",
-                    ),
+                    os.path.join(os.getcwd(), config.ASSETS_DIRECTORY, config.IMAGES_DIRECTORY, "link.png"),
                     77 + siteWidth,
                     y_position,
                     width=10,
@@ -150,9 +109,7 @@ def saveToPdf(foundAccounts, resultType, config):
                     mask="auto",
                 )
                 canva.linkURL(
-                    result["url"],
-                    (77 + siteWidth, y_position, 77 + siteWidth + 10, y_position + 10),
-                    relative=1,
+                    result["url"], (77 + siteWidth, y_position, 77 + siteWidth + 10, y_position + 10), relative=1
                 )
                 try:
                     if result["metadata"]:
@@ -162,67 +119,29 @@ def saveToPdf(foundAccounts, resultType, config):
                         for data in result["metadata"]:
                             if data["type"] == "String":
                                 metadataWidth = stringWidth(
-                                    f"{data['name']}:  {data['value']}",
-                                    config.FONT_NAME_REGULAR,
-                                    7,
+                                    f"{data['name']}:  {data['value']}", config.FONT_NAME_REGULAR, 7
                                 )
                                 canva.setFillColor("#EDEBED")
-                                canva.roundRect(
-                                    90,
-                                    y_position - 4,
-                                    metadataWidth + 5,
-                                    13,
-                                    6,
-                                    fill=1,
-                                    stroke=0,
-                                )
+                                canva.roundRect(90, y_position - 4, metadataWidth + 5, 13, 6, fill=1, stroke=0)
                                 canva.setFillColor("#000000")
                                 canva.setFont(config.FONT_NAME_BOLD, 7)
                                 canva.drawString(93, y_position, f"{data['name']}:")
-                                metadataWidth = stringWidth(
-                                    f"{data['name']}:",
-                                    config.FONT_NAME_BOLD,
-                                    7,
-                                )
+                                metadataWidth = stringWidth(f"{data['name']}:", config.FONT_NAME_BOLD, 7)
                                 canva.setFont(config.FONT_NAME_REGULAR, 7)
                                 canva.drawString(93 + metadataWidth, y_position, f"{data['value']}")
                                 y_position -= 15
                             elif data["type"] == "Array":
-                                metadataWidth = stringWidth(
-                                    f"{data['name']}:",
-                                    config.FONT_NAME_BOLD,
-                                    7,
-                                )
+                                metadataWidth = stringWidth(f"{data['name']}:", config.FONT_NAME_BOLD, 7)
                                 canva.setFillColor("#EDEBED")
-                                canva.roundRect(
-                                    90,
-                                    y_position - 4,
-                                    metadataWidth + 5,
-                                    13,
-                                    6,
-                                    fill=1,
-                                    stroke=0,
-                                )
+                                canva.roundRect(90, y_position - 4, metadataWidth + 5, 13, 6, fill=1, stroke=0)
                                 canva.setFillColor("#000000")
                                 canva.setFont(config.FONT_NAME_BOLD, 7)
                                 canva.drawString(93, y_position, f"{data['name']}:")
                                 y_position -= 15
                                 for value in data["value"]:
-                                    metadataWidth = stringWidth(
-                                        value,
-                                        config.FONT_NAME_BOLD,
-                                        7,
-                                    )
+                                    metadataWidth = stringWidth(value, config.FONT_NAME_BOLD, 7)
                                     canva.setFillColor("#EDEBED")
-                                    canva.roundRect(
-                                        100,
-                                        y_position - 4,
-                                        metadataWidth + 5,
-                                        13,
-                                        6,
-                                        fill=1,
-                                        stroke=0,
-                                    )
+                                    canva.roundRect(100, y_position - 4, metadataWidth + 5, 13, 6, fill=1, stroke=0)
                                     canva.setFillColor("#000000")
                                     canva.setFont(config.FONT_NAME_REGULAR, 7)
                                     canva.drawString(103, y_position, value)

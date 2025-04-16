@@ -28,11 +28,7 @@ def test_export_pdf():
     config.csv = False
     config.currentUser = None
     createSaveDirectory(config)
-    with open(
-        os.path.join(os.getcwd(), "tests", "data", "mock-email.json"),
-        "r",
-        encoding="UTF-8",
-    ) as f:
+    with open(os.path.join(os.getcwd(), "tests", "data", "mock-email.json"), "r", encoding="UTF-8") as f:
         foundAccounts = json.load(f)
     result = saveToPdf(foundAccounts, "email", config)
     assert result
@@ -44,11 +40,7 @@ def test_export_csv():
     config.csv = True
     config.currentEmail = None
     createSaveDirectory(config)
-    with open(
-        os.path.join(os.getcwd(), "tests", "data", "mock-username.json"),
-        "r",
-        encoding="UTF-8",
-    ) as f:
+    with open(os.path.join(os.getcwd(), "tests", "data", "mock-username.json"), "r", encoding="UTF-8") as f:
         foundAccounts = json.load(f)
     result = saveToCsv(foundAccounts, config)
     assert result
