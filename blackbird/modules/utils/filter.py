@@ -2,14 +2,14 @@ import re
 import sys
 
 
-def filterFoundAccounts(site):
+def filter_found_accounts(site):
     if "status" in site and site["status"] == "FOUND":
         return True
     else:
         return False
 
 
-def parseFilter(filter):
+def parse_filter(filter):
     pattern = r"(\w+)([=~><!]+)([^ ]+)\s*(and|or)?\s*"
     matches = re.findall(pattern, filter)
 
@@ -51,8 +51,8 @@ def evaluate_condition(prop, operator, value, site):
         return False
 
 
-def filterAccounts(filter, site):
-    conditions, logical_ops = parseFilter(filter)
+def filter_accounts(filter, site):
+    conditions, logical_ops = parse_filter(filter)
     result = evaluate_condition(*conditions[0], site)
 
     if not conditions:
@@ -70,16 +70,16 @@ def filterAccounts(filter, site):
     return result
 
 
-def filterNSFW(site):
+def filter_nsfw(site):
     if site["cat"] == "xx NSFW xx":
         return False
     else:
         return True
 
 
-def applyFilters(sitesToSearch, config):
+def apply_filters(sitesToSearch, config):
     if config.filter:
-        sitesToSearch = list(filter(lambda x: filterAccounts(config.filter, x), sitesToSearch))
+        sitesToSearch = list(filter(lambda x: filter_accounts(config.filter, x), sitesToSearch))
         if (len(sitesToSearch)) <= 0:
             config.console.print(f"⭕ No sites found for the given filter {config.filter}")
             sys.exit()
@@ -87,7 +87,7 @@ def applyFilters(sitesToSearch, config):
             config.console.print(f':page_with_curl: Applied "{config.filter}" filter to sites [{len(sitesToSearch)}]')
 
     if config.no_nsfw:
-        sitesToSearch = list(filter(lambda x: filterNSFW(x), sitesToSearch))
+        sitesToSearch = list(filter(lambda x: filter_nsfw(x), sitesToSearch))
         if (len(sitesToSearch)) <= 0:
             config.console.print("⭕ No remaining sites to be searched after NSFW filtering")
             sys.exit()

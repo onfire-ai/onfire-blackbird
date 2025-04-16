@@ -10,19 +10,19 @@ from rich.console import Console
 from blackbird import config
 from blackbird.modules.core.email import verify_email
 from blackbird.modules.core.username import verify_username
-from blackbird.modules.export.csv import saveToCsv
-from blackbird.modules.export.file_operations import createSaveDirectory
-from blackbird.modules.export.pdf import saveToPdf
+from blackbird.modules.export.csv import save_to_csv
+from blackbird.modules.export.file_operations import create_save_directory
+from blackbird.modules.export.pdf import save_to_pdf
 from blackbird.modules.ner.entity_extraction import inialize_nlp_model
-from blackbird.modules.utils.file_operations import getLinesFromFile, isFile
+from blackbird.modules.utils.file_operations import get_lines_from_file, is_file
 from blackbird.modules.utils.permute import Permute
-from blackbird.modules.utils.userAgent import getRandomUserAgent
-from blackbird.modules.whatsmyname.list_operations import checkUpdates
+from blackbird.modules.utils.userAgent import get_random_user_agent
+from blackbird.modules.whatsmyname.list_operations import check_updates
 
 load_dotenv()
 
 
-def initiate():
+def initialize():
     if not os.path.exists("logs/"):
         os.makedirs("logs/")
     logging.basicConfig(
@@ -93,7 +93,7 @@ def initiate():
     config.dateRaw = datetime.now().strftime("%m_%d_%Y")
     config.datePretty = datetime.now().strftime("%B %d, %Y")
 
-    config.userAgent = getRandomUserAgent(config)
+    config.userAgent = get_random_user_agent(config)
 
     config.usernameFoundAccounts = None
     config.emailFoundAccounts = None
@@ -103,7 +103,7 @@ def initiate():
 
 
 def main():
-    initiate()
+    initialize()
     config.console.print(
         """[red]
     ▄▄▄▄    ██▓    ▄▄▄       ▄████▄   ██ ▄█▀ ▄▄▄▄    ██▓ ██▀███  ▓█████▄
@@ -143,15 +143,15 @@ def main():
     if config.no_update:
         config.console.print(":next_track_button:  Skipping update...")
     else:
-        checkUpdates(config)
+        check_updates(config)
 
     if config.ai:
         inialize_nlp_model(config)
         config.aiModel = True
 
     if config.username_file:
-        if isFile(config.username_file):
-            config.username = getLinesFromFile(config.username_file)
+        if is_file(config.username_file):
+            config.username = get_lines_from_file(config.username_file)
             config.console.print(
                 f':glasses: Successfully loaded {len(config.username)} usernames from "{config.username_file}"'
             )
@@ -171,18 +171,18 @@ def main():
         for user in config.username:
             config.currentUser = user
             if config.dump or config.csv or config.pdf:
-                createSaveDirectory(config)
+                create_save_directory(config)
             verify_username(config.currentUser, config)
             if config.csv and config.usernameFoundAccounts:
-                saveToCsv(config.usernameFoundAccounts, config)
+                save_to_csv(config.usernameFoundAccounts, config)
             if config.pdf and config.usernameFoundAccounts:
-                saveToPdf(config.usernameFoundAccounts, "username", config)
+                save_to_pdf(config.usernameFoundAccounts, "username", config)
             config.currentUser = None
             config.usernameFoundAccounts = None
 
     if config.email_file:
-        if isFile(config.email_file):
-            config.email = getLinesFromFile(config.email_file)
+        if is_file(config.email_file):
+            config.email = get_lines_from_file(config.email_file)
             config.console.print(f':glasses: Successfully loaded {len(config.email)} emails from "{config.email_file}"')
         else:
             config.console.print(f'❌ Could not read file "{config.email_file}"')
@@ -192,11 +192,11 @@ def main():
         for email in config.email:
             config.currentEmail = email
             if config.dump or config.csv or config.pdf:
-                createSaveDirectory(config)
+                create_save_directory(config)
             verify_email(email, config)
             if config.csv and config.emailFoundAccounts:
-                saveToCsv(config.emailFoundAccounts, config)
+                save_to_csv(config.emailFoundAccounts, config)
             if config.pdf and config.emailFoundAccounts:
-                saveToPdf(config.emailFoundAccounts, "email", config)
+                save_to_pdf(config.emailFoundAccounts, "email", config)
             config.currentEmail = None
             config.emailFoundAccounts = None

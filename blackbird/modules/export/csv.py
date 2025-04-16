@@ -1,14 +1,14 @@
 import csv
 import os
 
-from blackbird.modules.export.file_operations import generateName
-from blackbird.modules.utils.log import logError
+from blackbird.modules.export.file_operations import generate_name
+from blackbird.modules.utils.log import log_error
 
 
 # Save results to CSV file
-def saveToCsv(results, config):
+def save_to_csv(results, config):
     try:
-        fileName = generateName(config, "csv")
+        fileName = generate_name(config, "csv")
         path = os.path.join(config.saveDirectory, fileName)
         with open(path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
@@ -18,5 +18,5 @@ def saveToCsv(results, config):
         config.console.print(f"💾  Saved results to '[cyan1]{fileName}[/cyan1]'")
         return True
     except Exception as e:
-        logError(e, "Coudn't saved results to CSV file!", config)
+        log_error(e, "Coudn't saved results to CSV file!", config)
         return False

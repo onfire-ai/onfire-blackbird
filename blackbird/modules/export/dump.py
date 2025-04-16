@@ -4,12 +4,11 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ""))
 
-from utils.log import logError
+from blackbird.modules.utils.log import log_error
 
 
 # Dump HTML data to a .html file
-def dumpContent(path, site, response, config):
-
+def dump_content(path, site, response, config):
     siteName = site["name"].replace(" ", "_")
     content = response["content"]
     extension = "txt"
@@ -33,5 +32,5 @@ def dumpContent(path, site, response, config):
                 file.write(content)
         return True
     except Exception as e:
-        logError(e, "Coudn't DUMP data to HTML file!", config)
+        log_error(e, "Coudn't DUMP data to HTML file!", config)
         return False

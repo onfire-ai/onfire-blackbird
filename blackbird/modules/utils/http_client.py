@@ -1,7 +1,7 @@
 import chardet
 import requests
 
-from blackbird.modules.utils.log import logError
+from blackbird.modules.utils.log import log_error
 
 requests.packages.urllib3.disable_warnings()
 
@@ -29,7 +29,7 @@ def do_sync_request(method, url, config, data=None, customHeaders=None, cookies=
     except Exception as e:
         if config.verbose:
             config.console.print(f"  ❌ Error in Sync HTTP Request [{method}] {url}")
-        logError(e, f"Error in Sync HTTP Request [{method}] {url}", config)
+        log_error(e, f"Error in Sync HTTP Request [{method}] {url}", config)
         return None
 
 
@@ -78,5 +78,5 @@ async def do_async_request(method, url, session, config, data=None, customHeader
     except Exception as e:
         if config.verbose:
             config.console.print(f"  ❌ Error in Async HTTP Request [{method}] {url}")
-        logError(e, f"Error in Async HTTP Request [{method}] {url}", config)
+        log_error(e, f"Error in Async HTTP Request [{method}] {url}", config)
         return None

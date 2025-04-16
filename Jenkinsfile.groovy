@@ -97,6 +97,7 @@ pipeline {
             }
             steps {
                 script {
+                    echo "Publishing package to CodeArtifact..."
                     sh 'poetry build'
                     def publish_result = onfire.publishToCodeartifact()
                     echo "Publish Result: ${publish_result}"

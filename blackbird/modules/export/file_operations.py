@@ -5,8 +5,8 @@ from rich.markup import escape
 
 
 # Creates directory to save PDF, CSV and HTML content
-def createSaveDirectory(config):
-    folderName = generateName(config)
+def create_save_directory(config):
+    folderName = generate_name(config)
 
     strPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "results", Path(folderName))
     config.saveDirectory = strPath
@@ -18,22 +18,22 @@ def createSaveDirectory(config):
 
     if config.dump:
         if config.currentUser:
-            createDumpDirectory(config.currentUser, config)
+            create_dump_directory(config.currentUser, config)
 
         if config.currentEmail:
-            createDumpDirectory(config.currentEmail, config)
+            create_dump_directory(config.currentEmail, config)
 
     if config.pdf:
         if config.currentUser:
-            createImagesDirectory(config.currentUser, config)
+            create_images_directory(config.currentUser, config)
 
         if config.currentEmail:
-            createImagesDirectory(config.currentEmail, config)
+            create_images_directory(config.currentEmail, config)
 
     return True
 
 
-def createDumpDirectory(identifier, config):
+def create_dump_directory(identifier, config):
     folderName = f"dump_{identifier}"
     strPath = os.path.join(config.saveDirectory, folderName)
     path = Path(strPath)
@@ -43,7 +43,7 @@ def createDumpDirectory(identifier, config):
         path.mkdir(parents=True, exist_ok=True)
 
 
-def createImagesDirectory(identifier, config):
+def create_images_directory(identifier, config):
     folderName = f"images_{identifier}"
     strPath = os.path.join(config.saveDirectory, folderName)
     path = Path(strPath)
@@ -53,7 +53,7 @@ def createImagesDirectory(identifier, config):
         path.mkdir(parents=True, exist_ok=True)
 
 
-def generateName(config, extension=None):
+def generate_name(config, extension=None):
     if config.currentUser:
         folderName = f"{config.currentUser}_{config.dateRaw}_blackbird"
     elif config.currentEmail:

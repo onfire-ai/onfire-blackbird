@@ -38,7 +38,7 @@ def download_image(metadataReturn, site, config):
     return metadataReturn
 
 
-def extractMetadata(metadata, response, site, config):
+def extract_metadata(metadata, response, site, config):
     extractedMetadata = []
     for params in metadata:
         metadataReturn = params

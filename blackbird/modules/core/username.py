@@ -5,20 +5,20 @@ import time
 
 import aiohttp
 
-from blackbird.modules.export.dump import dumpContent
+from blackbird.modules.export.dump import dump_content
 from blackbird.modules.ner.entity_extraction import extract_data_with_ai
 from blackbird.modules.sites.instagram import get_instagram_account_info
-from blackbird.modules.utils.filter import applyFilters, filterFoundAccounts
+from blackbird.modules.utils.filter import apply_filters, filter_found_accounts
 from blackbird.modules.utils.http_client import do_async_request
-from blackbird.modules.utils.log import logError
-from blackbird.modules.utils.parse import extractMetadata, remove_duplicates
-from blackbird.modules.whatsmyname.list_operations import readList
+from blackbird.modules.utils.log import log_error
+from blackbird.modules.utils.parse import extract_metadata, remove_duplicates
+from blackbird.modules.whatsmyname.list_operations import read_list
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 # Verify account existence based on list args
-async def checkSite(site, method, url, session, semaphore, config):
+async def check_site(site, method, url, session, semaphore, config):
     returnData = {"name": site["name"], "url": url, "category": site["cat"], "status": "NONE", "metadata": None}
     extractedMetadata = []
 
@@ -39,7 +39,7 @@ async def checkSite(site, method, url, session, semaphore, config):
                         )
 
                         if site["name"] in config.metadata_params["sites"]:
-                            metadata = extractMetadata(
+                            metadata = extract_metadata(
                                 config.metadata_params["sites"][site["name"]], response, site["name"], config
                             )
                             extractedMetadata.extend(metadata)
@@ -65,7 +65,7 @@ async def checkSite(site, method, url, session, semaphore, config):
                         if config.dump:
                             path = os.path.join(config.saveDirectory, f"dump_{config.currentUser}")
 
-                            result = dumpContent(path, site, response, config)
+                            result = dump_content(path, site, response, config)
                             if result is True and config.verbose:
                                 config.console.print("      💾  Saved HTML data from found account")
                 else:
@@ -76,7 +76,7 @@ async def checkSite(site, method, url, session, semaphore, config):
                         )
                 return returnData
         except Exception as e:
-            logError(e, f"Coudn't check {site['name']} {url}", config)
+            log_error(e, f"Coudn't check {site['name']} {url}", config)
             return returnData
 
 
@@ -87,7 +87,7 @@ async def fetch_results(username, config):
         semaphore = asyncio.Semaphore(config.max_concurrent_requests)
         for site in config.username_sites:
             tasks.append(
-                checkSite(
+                check_site(
                     site=site,
                     method="GET",
                     url=site["uri_check"].replace("{account}", username),
@@ -104,13 +104,13 @@ async def fetch_results(username, config):
 # Start username check and presents results to user
 def verify_username(username, config, sitesToSearch=None, metadata_params=None):
     if sitesToSearch is None or metadata_params is None:
-        data = readList("username", config)
+        data = read_list("username", config)
         sitesToSearch = data["sites"]
-        config.metadata_params = readList("metadata", config)
+        config.metadata_params = read_list("metadata", config)
     else:
         config.metadata_params = metadata_params
 
-    config.username_sites = applyFilters(sitesToSearch, config)
+    config.username_sites = apply_filters(sitesToSearch, config)
 
     config.console.print(f':play_button: Enumerating accounts with username "[cyan1]{username}[/cyan1]"')
     start_time = time.time()
@@ -127,7 +127,7 @@ def verify_username(username, config, sitesToSearch=None, metadata_params=None):
         )
 
     # Filter results to only found accounts
-    foundAccounts = list(filter(filterFoundAccounts, results["results"]))
+    foundAccounts = list(filter(filter_found_accounts, results["results"]))
     config.usernameFoundAccounts = foundAccounts
     if len(foundAccounts) <= 0:
         config.console.print("⭕ No accounts were found for the given username")

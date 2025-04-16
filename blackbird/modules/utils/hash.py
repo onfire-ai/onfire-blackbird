@@ -3,7 +3,6 @@ import json
 
 
 # Return MD5 HASH for given JSON
-def hashJSON(jsonData):
-    dumpJson = json.dumps(jsonData, sort_keys=True)
-    jsonHash = hashlib.md5(dumpJson.encode("utf-8")).hexdigest()
-    return jsonHash
+def hash_json(jsonData):
+    jsonString = json.dumps(jsonData, sort_keys=True)
+    return hashlib.md5(jsonString.encode("utf-8")).hexdigest()

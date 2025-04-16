@@ -6,13 +6,11 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
-from blackbird.modules.export.file_operations import generateName
-from blackbird.modules.utils.log import logError
-
-# Save results to PDF file
+from blackbird.modules.export.file_operations import generate_name
+from blackbird.modules.utils.log import log_error
 
 
-def saveToPdf(foundAccounts, resultType, config):
+def save_to_pdf(foundAccounts, resultType, config):
     regularFontFile = os.path.join(
         os.getcwd(), config.ASSETS_DIRECTORY, config.FONTS_DIRECTORY, config.FONT_REGULAR_FILE
     )
@@ -21,7 +19,7 @@ def saveToPdf(foundAccounts, resultType, config):
         pdfmetrics.registerFont(TTFont(config.FONT_NAME_REGULAR, regularFontFile))
         pdfmetrics.registerFont(TTFont(config.FONT_NAME_BOLD, boldFontFile))
 
-        fileName = generateName(config, "pdf")
+        fileName = generate_name(config, "pdf")
         path = os.path.join(config.saveDirectory, fileName)
 
         width, height = letter
@@ -174,5 +172,5 @@ def saveToPdf(foundAccounts, resultType, config):
         config.console.print(f"💾  Saved results to '[cyan1]{fileName}[/cyan1]'")
         return True
     except Exception as e:
-        logError(e, "Coudn't saved results to PDF file!", config)
+        log_error(e, "Coudn't saved results to PDF file!", config)
         return False

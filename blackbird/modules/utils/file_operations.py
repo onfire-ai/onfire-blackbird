@@ -1,11 +1,11 @@
 import os
 
 
-def isFile(fileName):
+def is_file(fileName):
     return os.path.isfile(fileName)
 
 
-def getLinesFromFile(fileName):
+def get_lines_from_file(fileName):
     try:
         with open(fileName) as f:
             lines = f.read().splitlines()

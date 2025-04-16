@@ -5,9 +5,9 @@ from datetime import datetime
 from rich.console import Console
 
 from blackbird import config
-from blackbird.modules.export.csv import saveToCsv
-from blackbird.modules.export.file_operations import createSaveDirectory
-from blackbird.modules.export.pdf import saveToPdf
+from blackbird.modules.export.csv import save_to_csv
+from blackbird.modules.export.file_operations import create_save_directory
+from blackbird.modules.export.pdf import save_to_pdf
 
 config.console = Console()
 
@@ -27,10 +27,10 @@ def test_export_pdf():
     config.pdf = True
     config.csv = False
     config.currentUser = None
-    createSaveDirectory(config)
+    create_save_directory(config)
     with open(os.path.join(os.getcwd(), "tests", "data", "mock-email.json"), "r", encoding="UTF-8") as f:
         foundAccounts = json.load(f)
-    result = saveToPdf(foundAccounts, "email", config)
+    result = save_to_pdf(foundAccounts, "email", config)
     assert result
 
 
@@ -39,8 +39,8 @@ def test_export_csv():
     config.pdf = False
     config.csv = True
     config.currentEmail = None
-    createSaveDirectory(config)
+    create_save_directory(config)
     with open(os.path.join(os.getcwd(), "tests", "data", "mock-username.json"), "r", encoding="UTF-8") as f:
         foundAccounts = json.load(f)
-    result = saveToCsv(foundAccounts, config)
+    result = save_to_csv(foundAccounts, config)
     assert result
