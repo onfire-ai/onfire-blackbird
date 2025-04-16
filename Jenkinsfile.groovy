@@ -103,8 +103,10 @@ pipeline {
                 expression { params.DEPLOY == true }
             }
             steps {
-                publish_result = onfire.publishToCodeartifact()
-                echo "Publish Result: ${publish_result}"
+                script {
+                    def publish_result = onfire.publishToCodeartifact()
+                    echo "Publish Result: ${publish_result}"
+                }
             }
         }
     }
