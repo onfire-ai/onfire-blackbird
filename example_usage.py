@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-from blackbird import run
+from onfire_blackbird import run
 
 
 async def main():
@@ -9,7 +9,7 @@ async def main():
     print("Running Blackbird search...")
 
     # Search for a single username
-    results = await run(usernames=["johndoe"], json_output=True, no_nsfw=True, verbose=False)
+    results = await run(usernames=["johndoe"], json_output=True, no_nsfw=True, verbose=True)
 
     # Pretty print the results
     print("\nResults:")

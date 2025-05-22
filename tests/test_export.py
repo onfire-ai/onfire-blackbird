@@ -4,10 +4,10 @@ from pathlib import Path
 
 from rich.console import Console
 
-from blackbird import config
-from blackbird.modules.export.csv import save_to_csv
-from blackbird.modules.export.file_operations import create_save_directory
-from blackbird.modules.export.pdf import save_to_pdf
+from onfire_blackbird import config
+from onfire_blackbird.modules.export.csv import save_to_csv
+from onfire_blackbird.modules.export.file_operations import create_save_directory
+from onfire_blackbird.modules.export.pdf import save_to_pdf
 
 config.console = Console()
 

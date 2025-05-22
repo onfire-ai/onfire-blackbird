@@ -2,9 +2,9 @@ from datetime import datetime
 
 from rich.console import Console
 
-from blackbird import config, verify_email, verify_username
-from blackbird.modules.utils.user_agent import get_random_user_agent
-from blackbird.modules.whatsmyname.list_operations import check_updates
+from onfire_blackbird import config, verify_email, verify_username
+from onfire_blackbird.modules.utils.user_agent import get_random_user_agent
+from onfire_blackbird.modules.whatsmyname.list_operations import check_updates
 
 config.no_nsfw = None
 config.proxy = None

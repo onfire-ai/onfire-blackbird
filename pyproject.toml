@@ -4,8 +4,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "onfire-blackbird"
-version = "0.2.0"
-description = "A short description of the blackbird project." # Please update this
+version = "0.2.1"
+description = "A short description of the onfire-blackbird project." # Please update this
 authors = ["Your Name <you@example.com>"] # Please update this format
 readme = "README.md"
 license = "MIT" # Choose an appropriate license identifier from SPDX list
@@ -18,7 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 packages = [
-    {include = "blackbird"}
+    {include = "onfire_blackbird"}
 ] # Tells Poetry where the package code is
 
 include = ["data/**/*"]
@@ -51,7 +51,7 @@ isort = "^5.0"
 ruff = "^0.5"
 
 [tool.poetry.scripts]
-blackbird = "blackbird.cli:main"
+onfire_blackbird = "onfire_blackbird.cli:main"
 
 [tool.black]
 line-length = 120
