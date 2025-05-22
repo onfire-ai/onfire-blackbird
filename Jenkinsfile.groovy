@@ -42,7 +42,7 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh 'apk update && apk add build-base'
-                sh 'poetry install --dev --all-extras'
+                sh 'poetry install --all-extras --with dev'
             }
         }
 
