@@ -1,4 +1,8 @@
 from pathlib import Path
+from typing import Optional
+
+from pydantic import BaseModel
+from rich.console import Console
 
 # Base directory for relative paths
 BASE_DIR = Path(__file__).parent.parent
@@ -33,3 +37,47 @@ FONT_REGULAR_FILE = "Montserrat-Regular.ttf"
 FONT_BOLD_FILE = "Montserrat-Bold.ttf"
 FONT_NAME_REGULAR = "Montserrat"
 FONT_NAME_BOLD = "Montserrat-Bold"
+
+
+class Config(BaseModel):
+    # CLI Arguments
+    username: Optional[list[str]] = None
+    username_file: Optional[str] = None
+    permute: bool = False
+    permute_all: bool = False
+    email: Optional[list[str]] = None
+    email_file: Optional[str] = None
+    csv: bool = False
+    pdf: bool = False
+    json: bool = False
+    verbose: bool = False
+    ai: bool = False
+    filter: Optional[str] = None
+    no_nsfw: bool = False
+    dump: bool = False
+    proxy: Optional[str] = None
+    timeout: int = 30
+    max_concurrent_requests: int = 30
+    no_update: bool = False
+    about: bool = False
+
+    # Runtime values
+    instagram_session_id: Optional[str] = None
+    console: Optional[Console] = None
+    date_raw: Optional[str] = None
+    date_pretty: Optional[str] = None
+    user_agent: Optional[str] = None
+    username_found_accounts: Optional[list] = None
+    email_found_accounts: Optional[list] = None
+    current_user: Optional[str] = None
+    current_email: Optional[str] = None
+    ai_model: bool = False
+
+    class Config:
+        # Allow attribute assignment after instance creation
+        arbitrary_types_allowed = True
+        validate_assignment = False
+
+
+# Create the default config instance
+config = Config()

@@ -8,7 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from rich.console import Console
 
-from blackbird import config
+from blackbird.config import BASE_DIR, LOG_DIRECTORY, LOG_PATH, config
 from blackbird.modules.core.email import verify_email
 from blackbird.modules.core.username import verify_username
 from blackbird.modules.export.csv import save_to_csv
@@ -18,19 +18,19 @@ from blackbird.modules.ner.entity_extraction import inialize_nlp_model
 from blackbird.modules.utils.console import print_if_not_json
 from blackbird.modules.utils.file_operations import get_lines_from_file, is_file
 from blackbird.modules.utils.permute import Permute
-from blackbird.modules.utils.userAgent import get_random_user_agent
+from blackbird.modules.utils.user_agent import get_random_user_agent
 from blackbird.modules.whatsmyname.list_operations import check_updates
 
 load_dotenv()
 
 
 def initialize():
-    log_dir = Path(config.BASE_DIR) / config.LOG_DIRECTORY
+    log_dir = Path(BASE_DIR) / LOG_DIRECTORY
     if not log_dir.exists():
         log_dir.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
-        filename=config.LOG_PATH, level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        filename=LOG_PATH, level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
     parser = argparse.ArgumentParser(
@@ -39,7 +39,7 @@ def initialize():
     parser.add_argument("-u", "--username", nargs="*", type=str, help="One or more usernames to search.")
     parser.add_argument("-uf", "--username-file", help="The list of usernames to be searched.")
     parser.add_argument("--permute", action="store_true", help="Permute usernames, ignoring single elements.")
-    parser.add_argument("--permuteall", action="store_true", help="Permute usernames, all elements.")
+    parser.add_argument("--permute-all", action="store_true", help="Permute usernames, all elements.")
     parser.add_argument("-e", "--email", nargs="*", type=str, help="One or more email to search.")
     parser.add_argument("-ef", "--email-file", help="The list of emails to be searched.")
     parser.add_argument(
@@ -74,11 +74,13 @@ def initialize():
     parser.add_argument("--about", action="store_true", help="Show about information and exit.")
     args = parser.parse_args()
 
-    # Store the necessary arguments to config Object
+    # Update config with parsed arguments
     config.username = args.username
     config.username_file = args.username_file
     config.permute = args.permute
-    config.permuteall = args.permuteall
+    config.permute_all = args.permute_all
+    config.email = args.email
+    config.email_file = args.email_file
     config.csv = args.csv
     config.pdf = args.pdf
     config.json = args.json
@@ -90,24 +92,22 @@ def initialize():
     config.ai = args.ai
     config.timeout = args.timeout
     config.max_concurrent_requests = args.max_concurrent_requests
-    config.email = args.email
-    config.email_file = args.email_file
     config.no_update = args.no_update
     config.about = args.about
     config.instagram_session_id = os.getenv("INSTAGRAM_SESSION_ID")
 
     config.console = Console()
 
-    config.dateRaw = datetime.now().strftime("%m_%d_%Y")
-    config.datePretty = datetime.now().strftime("%B %d, %Y")
+    config.date_raw = datetime.now().strftime("%m_%d_%Y")
+    config.date_pretty = datetime.now().strftime("%B %d, %Y")
 
-    config.userAgent = get_random_user_agent(config)
+    config.user_agent = get_random_user_agent(config)
 
-    config.usernameFoundAccounts = None
-    config.emailFoundAccounts = None
+    config.username_found_accounts = None
+    config.email_found_accounts = None
 
-    config.currentUser = None
-    config.currentEmail = None
+    config.current_user = None
+    config.current_email = None
 
 
 def main():
@@ -144,7 +144,7 @@ def main():
     if not config.username and not config.email and not config.username_file and not config.email_file:
         print_if_not_json("Either --username or --email is required")
         sys.exit()
-    if not config.username and (config.permute or config.permuteall):
+    if not config.username and (config.permute or config.permute_all):
         print_if_not_json("Permutations requires --username")
         sys.exit()
 
@@ -155,32 +155,36 @@ def main():
 
     if config.ai:
         inialize_nlp_model(config)
-        config.aiModel = True
+        config.ai_model = True
 
     if config.username_file:
         if is_file(config.username_file):
-            config.username = get_lines_from_file(config.username_file)
-            print_if_not_json(
-                f':glasses: Successfully loaded {len(config.username)} usernames from "{config.username_file}"'
-            )
+            usernames = get_lines_from_file(config.username_file)
+            if usernames:
+                config.username = usernames
+                print_if_not_json(
+                    f':glasses: Successfully loaded {len(usernames)} usernames from "{config.username_file}"'
+                )
         else:
             print_if_not_json(f'❌ Could not read file "{config.username_file}"')
             sys.exit()
 
     if config.username:
-        if (config.permute or config.permuteall) and len(config.username) > 1:
+        if (config.permute or config.permute_all) and len(config.username) > 1:
             elements = " ".join(config.username)
-            way = "all" if config.permuteall else "strict"
+            way = "all" if config.permute_all else "strict"
             permute = Permute(config.username)
-            config.username = permute.gather(way)
-            print_if_not_json(
-                f":glasses: Successfully loaded {len(config.username)} usernames from permuting {elements}"
-            )
+            permuted_usernames = permute.gather(way)
+            if permuted_usernames:
+                config.username = permuted_usernames
+                print_if_not_json(
+                    f":glasses: Successfully loaded {len(permuted_usernames)} usernames from permuting {elements}"
+                )
         for user in config.username:
-            config.currentUser = user
+            config.current_user = user
             if config.dump or config.csv or config.pdf:
                 create_save_directory(config)
-            found_accounts = verify_username(config.currentUser, config)
+            found_accounts = verify_username(config.current_user, config)
             if config.csv and found_accounts:
                 save_to_csv(found_accounts, config)
             if config.pdf and found_accounts:
@@ -191,20 +195,22 @@ def main():
                 output_json(found_accounts, config)
                 # Exit after JSON output
                 return
-            config.currentUser = None
-            config.usernameFoundAccounts = None
+            config.current_user = None
+            config.username_found_accounts = None
 
     if config.email_file:
         if is_file(config.email_file):
-            config.email = get_lines_from_file(config.email_file)
-            print_if_not_json(f':glasses: Successfully loaded {len(config.email)} emails from "{config.email_file}"')
+            emails = get_lines_from_file(config.email_file)
+            if emails:
+                config.email = emails
+                print_if_not_json(f':glasses: Successfully loaded {len(emails)} emails from "{config.email_file}"')
         else:
             print_if_not_json(f'❌ Could not read file "{config.email_file}"')
             sys.exit()
 
     if config.email:
         for email in config.email:
-            config.currentEmail = email
+            config.current_email = email
             if config.dump or config.csv or config.pdf:
                 create_save_directory(config)
             email_found_accounts = verify_email(email, config)
@@ -218,5 +224,5 @@ def main():
                 output_json(email_found_accounts, config)
                 # Exit after JSON output
                 return
-            config.currentEmail = None
-            config.emailFoundAccounts = None
+            config.current_email = None
+            config.email_found_accounts = None

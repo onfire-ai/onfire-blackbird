@@ -3,7 +3,7 @@ from datetime import datetime
 from rich.console import Console
 
 from blackbird import config, verify_email, verify_username
-from blackbird.modules.utils.userAgent import get_random_user_agent
+from blackbird.modules.utils.user_agent import get_random_user_agent
 from blackbird.modules.whatsmyname.list_operations import check_updates
 
 config.no_nsfw = None
@@ -15,11 +15,11 @@ config.csv = None
 config.pdf = None
 config.filter = "name=Gravatar"
 config.console = Console()
-config.userAgent = get_random_user_agent(config)
+config.user_agent = get_random_user_agent(config)
 config.max_concurrent_requests = 30
 
-config.dateRaw = datetime.now().strftime("%m_%d_%Y")
-config.datePretty = datetime.now().strftime("%B %d, %Y")
+config.date_raw = datetime.now().strftime("%m_%d_%Y")
+config.date_pretty = datetime.now().strftime("%B %d, %Y")
 
 check_updates(config)
 

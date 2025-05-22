@@ -8,7 +8,7 @@ from blackbird.modules.utils.log import log_error
 
 
 # Read list file and return content
-def read_list(option, config):
+def read_list(option: str, config) -> dict | bool:
     if option == "username":
         with open(config.USERNAME_LIST_PATH, "r", encoding="UTF-8") as f:
             data = json.load(f)

@@ -34,12 +34,12 @@ spacy = ">=3.8.2"
 beautifulsoup4 = ">=4.12.3"
 aiohttp = ">=3.9.3"
 tqdm = ">=4.67.0"
+en-blackbird-osint-ner = {version = "^1.0.0", optional = true}
 
-[tool.poetry.group.ai-ner]
-optional = true
-
-[tool.poetry.group.ai-ner.dependencies]
-en-blackbird-osint-ner = "^1.0.0"
+[tool.poetry.extras]
+ai-ner = [
+    "en-blackbird-osint-ner"
+]
 
 [tool.poetry.group.dev]
 optional = true

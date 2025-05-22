@@ -164,19 +164,6 @@
             "cat": "social"
         },
         {
-            "name": "aaha_chat",
-            "uri_check": "https://www.aahachat.org/profile/{account}/",
-            "e_code": 200,
-            "e_string": "https://www.aahachat.org/profile",
-            "m_string": "<title>Page not found",
-            "m_code": 404,
-            "known": [
-                "crazy",
-                "dog"
-            ],
-            "cat": "social"
-        },
-        {
             "name": "about.me",
             "uri_check": "https://about.me/{account}",
             "e_code": 200,
@@ -2386,20 +2373,6 @@
                 "happiness"
             ],
             "cat": "shopping"
-        },
-        {
-            "name": "Mastodon-EU_Voice",
-            "uri_pretty": "https://social.network.europa.eu/@{account}",
-            "uri_check": "https://social.network.europa.eu/api/v1/accounts/lookup?acct={account}",
-            "e_code": 200,
-            "e_string": "social.network.europa.eu",
-            "m_string": "The page you are looking for isn&#39;t here.",
-            "m_code": 404,
-            "known": [
-                "EC_DIGIT",
-                "EUSPA"
-            ],
-            "cat": "social"
         },
         {
             "name": "Expressional.social (Mastodon Instance)",
@@ -5871,16 +5844,16 @@
         },
         {
             "name": "omg.lol",
-            "uri_check": "https://api.omg.lol/address/{account}/availability",
+            "uri_check": "https://api.omg.lol/address/{account}/info",
             "uri_pretty": "https://{account}.omg.lol",
-            "strip_bad_char": ".",
+            "strip_bad_char": "@.",
             "e_code": 200,
-            "e_string": "\"available\": false",
-            "m_string": "\"available\": true",
+            "e_string": "\"success\": true",
+            "m_string": "\"success\": false",
             "m_code": 200,
             "known": [
                 "cwa",
-                "ben"
+                "adam"
             ],
             "cat": "social"
         },
@@ -6250,20 +6223,6 @@
                 "bob"
             ],
             "cat": "tech"
-        },
-        {
-            "name": "Peing",
-            "uri_check": "https://peing.net/api/v2/items/?type=answered&account={account}",
-            "uri_pretty": "https://peing.net/{account}",
-            "e_code": 200,
-            "e_string": "items",
-            "m_code": 404,
-            "m_string": "Not Found",
-            "known": [
-                "honey",
-                "blink"
-            ],
-            "cat": "social"
         },
         {
             "name": "Periscope",
@@ -6724,12 +6683,13 @@
         {
             "name": "Pronouny",
             "uri_check": "https://pronouny.xyz/api/users/profile/username/{account}",
+            "uri_pretty": "https://pronouny.xyz/users/{account}",
             "e_code": 200,
-            "e_string": "username",
+            "e_string": "\"username\":",
             "m_code": 400,
             "m_string": "That user doesn't exist",
             "known": [
-                "test",
+                "donna",
                 "honey"
             ],
             "cat": "social"

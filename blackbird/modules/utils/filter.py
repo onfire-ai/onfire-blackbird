@@ -26,7 +26,7 @@ def parse_filter(filter):
     return conditions, logical_ops
 
 
-def evaluate_condition(prop, operator, value, site):
+def evaluate_condition(prop: str, operator: str, value: str, site: dict):
     prop = prop.lower()
     value = value.lower()
     if prop not in site:
@@ -53,8 +53,8 @@ def evaluate_condition(prop, operator, value, site):
         return False
 
 
-def filter_accounts(filter, site):
-    conditions, logical_ops = parse_filter(filter)
+def filter_accounts(account_filter, site: dict):
+    conditions, logical_ops = parse_filter(account_filter)
     result = evaluate_condition(*conditions[0], site)
 
     if not conditions:
@@ -79,21 +79,21 @@ def filter_nsfw(site):
         return True
 
 
-def apply_filters(sitesToSearch, config):
+def apply_filters(sites_to_search, config):
     if config.filter:
-        sitesToSearch = list(filter(lambda x: filter_accounts(config.filter, x), sitesToSearch))
-        if (len(sitesToSearch)) <= 0:
+        sites_to_search = list(filter(lambda x: filter_accounts(config.filter, x), sites_to_search))
+        if (len(sites_to_search)) <= 0:
             print_if_not_json(f"⭕ No sites found for the given filter {config.filter}")
             sys.exit()
         else:
-            print_if_not_json(f':page_with_curl: Applied "{config.filter}" filter to sites [{len(sitesToSearch)}]')
+            print_if_not_json(f':page_with_curl: Applied "{config.filter}" filter to sites [{len(sites_to_search)}]')
 
     if config.no_nsfw:
-        sitesToSearch = list(filter(lambda x: filter_nsfw(x), sitesToSearch))
-        if (len(sitesToSearch)) <= 0:
+        sites_to_search = list(filter(lambda x: filter_nsfw(x), sites_to_search))
+        if (len(sites_to_search)) <= 0:
             print_if_not_json("⭕ No remaining sites to be searched after NSFW filtering")
             sys.exit()
         else:
-            print_if_not_json(f":page_with_curl: Filtered NSFW sites [{len(sitesToSearch)}]")
+            print_if_not_json(f":page_with_curl: Filtered NSFW sites [{len(sites_to_search)}]")
 
-    return sitesToSearch
+    return sites_to_search
