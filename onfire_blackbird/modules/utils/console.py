@@ -1,4 +1,4 @@
-from onfire_blackbird import config
+from onfire_blackbird.config import config
 
 
 def print_if_not_json(*args, **kwargs):
@@ -8,5 +8,6 @@ def print_if_not_json(*args, **kwargs):
 
     All arguments are passed directly to config.console.print
     """
-    if not hasattr(config, "json") or not config.json:
-        config.console.print(*args, **kwargs)
+    if not hasattr(config, "json") or not config.json_output:
+        if hasattr(config, "console") and config.console is not None:
+            config.console.print(*args, **kwargs)

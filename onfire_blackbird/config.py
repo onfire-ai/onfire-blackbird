@@ -1,38 +1,24 @@
 from pathlib import Path
 from typing import Optional
 
+import spacy
 from pydantic import BaseModel
 from rich.console import Console
 
 # Base directory for relative paths
 BASE_DIR = Path(__file__).parent.parent
 
-# List directory
+# Directory and file constants
 LIST_DIRECTORY = "data"
-
-# Username List
 USERNAME_LIST_URL = "https://raw.githubusercontent.com/WebBreacher/WhatsMyName/main/wmn-data.json"
 USERNAME_LIST_FILENAME = "wmn-data.json"
-USERNAME_LIST_PATH = BASE_DIR / LIST_DIRECTORY / USERNAME_LIST_FILENAME
 USERNAME_METADATA_LIST_FILENAME = "wmn-metadata.json"
-USERNAME_METADATA_LIST_PATH = BASE_DIR / LIST_DIRECTORY / USERNAME_METADATA_LIST_FILENAME
-
-# Email List
 EMAIL_LIST_FILENAME = "email-data.json"
-EMAIL_LIST_PATH = BASE_DIR / LIST_DIRECTORY / EMAIL_LIST_FILENAME
-
-# Logs
 LOG_DIRECTORY = "logs"
 LOG_FILENAME = "blackbird.log"
-LOG_PATH = BASE_DIR / LOG_DIRECTORY / LOG_FILENAME
-
-# Assets
 ASSETS_DIRECTORY = "assets"
 FONTS_DIRECTORY = "fonts"
 IMAGES_DIRECTORY = "img"
-
-
-# PDF
 FONT_REGULAR_FILE = "Montserrat-Regular.ttf"
 FONT_BOLD_FILE = "Montserrat-Bold.ttf"
 FONT_NAME_REGULAR = "Montserrat"
@@ -49,7 +35,7 @@ class Config(BaseModel):
     email_file: Optional[str] = None
     csv: bool = False
     pdf: bool = False
-    json: bool = False
+    json_output: bool = False
     verbose: bool = False
     ai: bool = False
     filter: Optional[str] = None
@@ -72,6 +58,39 @@ class Config(BaseModel):
     current_user: Optional[str] = None
     current_email: Optional[str] = None
     ai_model: bool = False
+    nlp: Optional[spacy.Language] = None
+    username_sites: Optional[list] = None
+    metadata_params: Optional[dict] = None
+    use_cache: bool = True
+    base_dir: Path = BASE_DIR
+
+    @property
+    def username_list_path(self) -> Path:
+        return self.base_dir / LIST_DIRECTORY / USERNAME_LIST_FILENAME
+
+    @property
+    def username_metadata_list_path(self) -> Path:
+        return self.base_dir / LIST_DIRECTORY / USERNAME_METADATA_LIST_FILENAME
+
+    @property
+    def email_list_path(self) -> Path:
+        return self.base_dir / LIST_DIRECTORY / EMAIL_LIST_FILENAME
+
+    @property
+    def log_path(self) -> Path:
+        return self.base_dir / LOG_DIRECTORY / LOG_FILENAME
+
+    @property
+    def assets_path(self) -> Path:
+        return self.base_dir / ASSETS_DIRECTORY
+
+    @property
+    def fonts_path(self) -> Path:
+        return self.base_dir / ASSETS_DIRECTORY / FONTS_DIRECTORY
+
+    @property
+    def images_path(self) -> Path:
+        return self.base_dir / ASSETS_DIRECTORY / IMAGES_DIRECTORY
 
     class Config:
         # Allow attribute assignment after instance creation

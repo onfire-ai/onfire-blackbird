@@ -9,7 +9,7 @@ async def main():
     print("Running Blackbird search...")
 
     # Search for a single username
-    results = await run(usernames=["johndoe"], json_output=True, no_nsfw=True, verbose=True)
+    results = await run(usernames=["johndoe"], json_output=True, no_nsfw=True, verbose=True, ai=False)
 
     # Pretty print the results
     print("\nResults:")

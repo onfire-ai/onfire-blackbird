@@ -8,7 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from rich.console import Console
 
-from onfire_blackbird.config import BASE_DIR, LOG_DIRECTORY, LOG_PATH, config
+from onfire_blackbird.config import BASE_DIR, LOG_DIRECTORY, config
 from onfire_blackbird.modules.core.email import verify_email
 from onfire_blackbird.modules.core.username import verify_username
 from onfire_blackbird.modules.export.csv import save_to_csv
@@ -30,7 +30,7 @@ def initialize():
         log_dir.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
-        filename=LOG_PATH, level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        filename=config.log_path, level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
     parser = argparse.ArgumentParser(
@@ -83,7 +83,7 @@ def initialize():
     config.email_file = args.email_file
     config.csv = args.csv
     config.pdf = args.pdf
-    config.json = args.json
+    config.json_output = args.json
     config.filter = args.filter
     config.no_nsfw = args.no_nsfw
     config.dump = args.dump
@@ -182,14 +182,14 @@ def main():
                 )
         for user in config.username:
             config.current_user = user
-            if config.dump or config.csv or config.pdf:
+            if config.dump or config.csv or config.pdf or config.ai:
                 create_save_directory(config)
             found_accounts = verify_username(config.current_user, config)
             if config.csv and found_accounts:
                 save_to_csv(found_accounts, config)
             if config.pdf and found_accounts:
                 save_to_pdf(found_accounts, "username", config)
-            if config.json and found_accounts:
+            if config.json_output and found_accounts:
                 from onfire_blackbird.modules.export.json_output import output_json
 
                 output_json(found_accounts, config)
@@ -218,7 +218,7 @@ def main():
                 save_to_csv(email_found_accounts, config)
             if config.pdf and email_found_accounts:
                 save_to_pdf(email_found_accounts, "email", config)
-            if config.json and email_found_accounts:
+            if config.json_output and email_found_accounts:
                 from onfire_blackbird.modules.export.json_output import output_json
 
                 output_json(email_found_accounts, config)

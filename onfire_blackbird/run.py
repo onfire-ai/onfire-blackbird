@@ -5,7 +5,7 @@ from typing import Optional
 
 from rich.console import Console
 
-from onfire_blackbird import config
+from onfire_blackbird.config import config
 from onfire_blackbird.modules.core.email import fetch_results as fetch_email_results
 from onfire_blackbird.modules.core.username import fetch_results as fetch_username_results
 from onfire_blackbird.modules.ner.entity_extraction import inialize_nlp_model
@@ -137,47 +137,47 @@ async def run(
         A dictionary containing the results
     """
     # Initialize config with core parameters first
-    setattr(config, "verbose", verbose)
+    config.verbose = verbose
 
     # Initialize console
     console = Console()
-    setattr(config, "console", console)
+    config.console = console
 
     # Set user agent (requires verbose and console to be initialized)
     user_agent = get_random_user_agent(config)
-    setattr(config, "user_agent", user_agent)
+    config.user_agent = user_agent
 
     # Now set all other config parameters
-    setattr(config, "username", usernames)
-    setattr(config, "email", emails)
-    setattr(config, "json", json_output)
-    setattr(config, "no_nsfw", no_nsfw)
-    setattr(config, "ai", ai)
-    setattr(config, "timeout", timeout)
-    setattr(config, "max_concurrent_requests", max_concurrent_requests)
-    setattr(config, "no_update", no_update)
-    setattr(config, "dump", dump)
-    setattr(config, "proxy", proxy)
-    setattr(config, "filter", filter_param)
-    setattr(config, "permute", permute)
-    setattr(config, "permuteall", permuteall)
-    setattr(config, "use_cache", use_cache)
-    setattr(config, "instagram_session_id", instagram_session_id)
+    config.username = usernames
+    config.email = emails
+    config.json_output = json_output
+    config.no_nsfw = no_nsfw
+    config.ai = ai
+    config.timeout = timeout
+    config.max_concurrent_requests = max_concurrent_requests
+    config.no_update = no_update
+    config.dump = dump
+    config.proxy = proxy
+    config.filter = filter_param
+    config.permute = permute
+    config.permute_all = permuteall
+    config.use_cache = use_cache
+    config.instagram_session_id = instagram_session_id
 
     # Initialize base directory and paths
-    setattr(config, "BASE_DIR", Path(__file__).parent.parent)
+    config.base_dir = Path(__file__).parent.parent
 
     # Initialize config dates
     date_raw = datetime.now().strftime("%m_%d_%Y")
     date_pretty = datetime.now().strftime("%B %d, %Y")
-    setattr(config, "date_raw", date_raw)
-    setattr(config, "date_pretty", date_pretty)
+    config.date_raw = date_raw
+    config.date_pretty = date_pretty
 
     # Initialize other required attributes
-    setattr(config, "username_found_accounts", None)
-    setattr(config, "email_found_accounts", None)
-    setattr(config, "current_user", None)
-    setattr(config, "current_email", None)
+    config.username_found_accounts = None
+    config.email_found_accounts = None
+    config.current_user = None
+    config.current_email = None
 
     # Update site lists if needed
     if not no_update:
@@ -186,14 +186,14 @@ async def run(
     # Initialize AI model if needed
     if ai:
         inialize_nlp_model(config)
-        setattr(config, "ai_model", True)
+        config.ai_model = True
 
     combined_results = {"username_results": [], "email_results": []}
 
     # Process usernames
     if usernames:
         for username in usernames:
-            setattr(config, "current_user", username)
+            config.current_user = username
             found_accounts = await verify_username_async(username, config)
             if found_accounts:
                 result = {
@@ -223,13 +223,13 @@ async def run(
                 combined_results["username_results"].append(result)
 
             # Reset for next username
-            setattr(config, "current_user", None)
-            setattr(config, "username_found_accounts", None)
+            config.current_user = None
+            config.username_found_accounts = None
 
     # Process emails
     if emails:
         for email in emails:
-            setattr(config, "current_email", email)
+            config.current_email = email
             found_accounts = await verify_email_async(email, config)
             if found_accounts:
                 result = {
@@ -259,7 +259,7 @@ async def run(
                 combined_results["email_results"].append(result)
 
             # Reset for next email
-            setattr(config, "current_email", None)
-            setattr(config, "email_found_accounts", None)
+            config.current_email = None
+            config.email_found_accounts = None
 
     return combined_results
