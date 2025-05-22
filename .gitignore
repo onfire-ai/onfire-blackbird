@@ -264,7 +264,7 @@ pyvenv.cfg
 *.pdf
 logs/*.log
 logs/blackbird.log
-*_blackbird/*
+_blackbird/*
 *.log
 logs/blackbird.log
 /logs
