@@ -60,6 +60,7 @@ class Config(BaseModel):
     ai_model: bool = False
     nlp: Optional[spacy.Language] = None
     username_sites: Optional[list] = None
+    email_sites: Optional[list] = None
     metadata_params: Optional[dict] = None
     use_cache: bool = True
     base_dir: Path = BASE_DIR
