@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "onfire-blackbird"
-version = "0.1.5"
+version = "0.2.0"
 description = "A short description of the blackbird project." # Please update this
 authors = ["Your Name <you@example.com>"] # Please update this format
 readme = "README.md"
